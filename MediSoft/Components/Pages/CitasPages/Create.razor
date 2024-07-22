@@ -1,0 +1,124 @@
+﻿@page "/Citas/Create/{CitaId:int}"
+@using Microsoft.AspNetCore.Mvc.Rendering
+@inject CitasService CitasService
+@inject DoctoresService DoctoresService
+@inject NavigationManager navigation
+
+<PageTitle>Crear Cita</PageTitle>
+<EditForm Model="nuevaCita" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
+    <div class="container">
+        <div class="card shadow-lg">
+            @* Header *@
+            <div class="card-header bg-primary text-white">
+                <h2><strong>Crear Cita</strong></h2>
+            </div>
+            @* Body *@
+            <div class="card-body">
+                @* Nombre *@
+                <label class="form-label" for="nombre"><strong>Nombre</strong></label>
+                <InputText id="nombre" class="form-control" @bind-Value="nuevaCita.Nombre" />
+                <ValidationMessage For="@(() => nuevaCita.Nombre)" />
+
+                @* Apellido *@
+                <label class="form-label" for="apellido"><strong>Apellido</strong></label>
+                <InputText id="apellido" class="form-control" @bind-Value="nuevaCita.Apellido" />
+                <ValidationMessage For="@(() => nuevaCita.Apellido)" />
+
+                @* Cédula *@
+                <label class="form-label" for="cedula"><strong>Cédula</strong></label>
+                <InputText id="cedula" class="form-control" @bind-Value="nuevaCita.Cedula" />
+                <ValidationMessage For="@(() => nuevaCita.Cedula)" />
+
+                @* Número de Seguro Médico *@
+                <label class="form-label" for="numeroSeguro"><strong>Número de Seguro Médico</strong></label>
+                <InputText id="numeroSeguro" class="form-control" @bind-Value="nuevaCita.NumeroSeguro" />
+                <ValidationMessage For="@(() => nuevaCita.NumeroSeguro)" />
+
+                @* Teléfono *@
+                <label class="form-label" for="telefono"><strong>Teléfono</strong></label>
+                <InputText id="telefono" class="form-control" @bind-Value="nuevaCita.Telefono" />
+                <ValidationMessage For="@(() => nuevaCita.Telefono)" />
+
+                @* Doctor *@
+                <label class="form-label" for="doctorSelect"><strong>Seleccionar Doctor</strong></label>
+                <InputSelect id="doctorSelect" class="form-control" @bind-Value="nuevaCita.DoctorId">
+                    <option value="">Seleccione un doctor</option>
+                    @foreach (var doctor in doctores)
+                    {
+                        <option value="@doctor.DoctorId">@doctor.Nombre @doctor.Apellido</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => nuevaCita.DoctorId)" />
+
+                @* Fecha y Hora *@
+                <label class="form-label" for="FechaHora"><strong>Fecha y Hora</strong></label>
+                <input type="datetime-local" class="form-control" @bind="nuevaCita.Fecha" />
+                <ValidationMessage For="@(() => nuevaCita.Fecha)" />
+
+                @* Causa *@
+                <label class="form-label" for="causa"><strong>Causa</strong></label>
+                <InputText id="causa" class="form-control" @bind-Value="nuevaCita.Causa" />
+                <ValidationMessage For="@(() => nuevaCita.Causa)" />
+            </div>
+            @* Footer *@
+            <div class="card-footer">
+                <button type="button" class="btn btn-secondary bi bi-arrow-left" @onclick="Volver">Volver</button>
+                <button type="submit" class="btn btn-success bi bi-floppy-fill">Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int CitaId { get; set; }
+    private List<Doctores> doctores = new List<Doctores>();
+    private Citas nuevaCita = new Citas();
+    private List<ToastMessage> MensajeToast = new List<ToastMessage>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        doctores = await DoctoresService.ListarDoctores();
+    }
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
+
+    private void Mensaje(ToastType toastType, string mensaje)
+    {
+        MensajeToast.Add(CreateToastMessage(toastType, mensaje));
+    }
+
+    public async Task Guardar()
+    {
+        try
+        {
+            if (nuevaCita.Fecha < DateTime.Now)
+            {
+                Mensaje(ToastType.Danger, "La fecha y hora de la cita no puede ser anterior a la fecha y hora actual.");
+                return;
+            }
+
+            await CitasService.Guardar(nuevaCita);
+            Mensaje(ToastType.Success, "Cita guardada correctamente.");
+            nuevaCita = new Citas(); // Limpiar el formulario
+        }
+        catch (Exception ex)
+        {
+            Mensaje(ToastType.Danger, $"Ocurrió un error: {ex.Message}");
+        }
+    }
+
+    public void Volver()
+    {
+        navigation.NavigateTo("/Citas/Index");
+    }
+}

@@ -1,0 +1,236 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+@inject AutentificacionService AutentificacionService
+@inject UsuariosService UsuariosService
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow-1 p-4">
+        <div class="top-row d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold"><strong>Sistema de citas médicas (MediSoft)</strong></h5>
+            <div class="d-flex justify-content-end align-items-center">
+                <div class="form-check form-switch me-3">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" @onchange="OnCheckboxChange" checked="@IsDarkMood">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Modo Oscuro</label>
+                </div>
+                <img @onclick="Perfil" style="width: 28px; height: 28px; margin-right: 10px; cursor: pointer;" src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" class="me-3" />
+                <img @onclick="CerrarSesion" style="width: 28px; height: 28px; margin-left: 10px; cursor: pointer;" src="https://cdn-icons-png.flaticon.com/256/1716/1716282.png" />
+            </div>
+        </div>
+
+        <article class="content">
+            @Body
+        </article>
+    </main>
+</div>
+
+@if (ModalPerfil)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal d-block show" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="border-radius: 16px;">
+                <div class="modal-header bg-dark text-white" style="border-radius: 16px 16px 0 0;">
+                    <h5 class="modal-title"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" style="width: 20px; height: 20px;" /> Perfil</h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="cerrarPerfil"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-2">
+                        <label class="fw-bold">Usuario:</label>
+                        <span>@usuario.Usuario</span>
+                    </div>
+                    <div class="row mb-2">
+                        <label class="fw-bold">Nombre Completo:</label>
+                        <span>@usuario.Nombre @usuario.Apellido</span>
+                    </div>
+                    <div class="row mb-2">
+                        <label class="fw-bold">Cédula:</label>
+                        <span>@usuario.Cedula</span>
+                    </div>
+                    <div class="row mb-2">
+                        <label class="fw-bold">Teléfono:</label>
+                        <span>@usuario.Telefono</span>
+                    </div>
+                    <div class="row mb-2">
+                        <label class="fw-bold">Correo Electrónico:</label>
+                        <span>@usuario.CorreoElectronico</span>
+                    </div>
+                    <div class="row">
+                        <label class="fw-bold">Rol:</label>
+                        <span>@usuario.Rol</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    :root {
+        --body-bg: #ffffff;
+        --body-color: #000000;
+        --sidebar-bg: #f8f9fa;
+        --sidebar-color: #000000;
+        --modal-bg: #ffffff;
+        --modal-header-bg: #343a40;
+        --modal-header-color: #ffffff;
+        --modal-body-bg: #ffffff;
+        --table-bg: #ffffff; 
+        --table-border-color: #dee2e6; 
+        --table-header-bg: #f8f9fa; 
+        --table-header-color: #000000;
+        --table-row-bg: #ffffff;
+        --table-row-color: #000000; 
+    }
+
+    [data-theme='dark'] {
+        --body-bg: #121212; 
+        --body-color: #e0e0e0;
+        --sidebar-bg: #1f1f1f; 
+        --sidebar-color: #e0e0e0; 
+        --modal-bg: #1f1f1f; 
+        --modal-header-bg: #292929; 
+        --modal-header-color: #e0e0e0; 
+        --modal-body-bg: #121212;
+        --table-bg: #1f1f1f; 
+        --table-border-color: #333;
+        --table-header-bg: #292929; 
+        --table-header-color: #e0e0e0; 
+        --table-row-bg: #121212; 
+        --table-row-color: #e0e0e0; 
+    }
+
+    body {
+        background-color: var(--body-bg);
+        color: var(--body-color);
+    }
+
+    .sidebar {
+        background-color: var(--sidebar-bg);
+        color: var(--sidebar-color);
+    }
+
+    .modal-content {
+        background-color: var(--modal-bg);
+    }
+
+    .modal-header {
+        background-color: var(--modal-header-bg);
+        color: var(--modal-header-color);
+    }
+
+    .modal-body {
+        background-color: var(--modal-body-bg);
+    }
+
+    table {
+        background-color: var(--table-bg);
+        border: 1px solid var(--table-border-color);
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        background-color: var(--table-row-bg);
+        color: var(--table-row-color);
+        padding: 8px;
+        border: 1px solid var(--table-border-color);
+    }
+
+    thead {
+        background-color: var(--table-header-bg);
+        color: var(--table-header-color);
+    }
+
+        thead th {
+            padding: 12px;
+        }
+</style>
+
+@code {
+    private bool IsDarkMood = false;
+    private bool ModalPerfil = false;
+    private Usuarios usuario = new Usuarios();
+    private string nombreCompleto = string.Empty;
+
+    private async Task OnCheckboxChange(ChangeEventArgs e)
+    {
+        IsDarkMood = (bool)e.Value;
+        var theme = IsDarkMood ? "dark" : "light";
+        await JSRuntime.InvokeVoidAsync("setTheme", theme);
+        StateHasChanged(); 
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var savedTheme = await JSRuntime.InvokeAsync<string>("getTheme");
+            IsDarkMood = savedTheme == "dark";
+            var theme = IsDarkMood ? "dark" : "light";
+            await JSRuntime.InvokeVoidAsync("setTheme", theme);
+            await ActualizarPerfil();
+        }
+    }
+
+    private async Task Perfil()
+    {
+        await ActualizarPerfil();
+        ModalPerfil = true;
+        StateHasChanged(); 
+    }
+
+    public async Task CerrarSesion()
+    {
+        await AutentificacionService.CerrarSesion(JSRuntime);
+    }
+
+    private async Task ActualizarPerfil()
+    {
+        try
+        {
+            var usuarioActual = await AutentificacionService.usuarioActual(JSRuntime, UsuariosService);
+            if (usuarioActual != null)
+            {
+                usuario = usuarioActual;
+                nombreCompleto = $"{usuario.Nombre} {usuario.Apellido}";
+            }
+            else
+            {
+                await CerrarSesion();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al actualizar perfil: {ex.Message}");
+        }
+        StateHasChanged(); 
+    }
+
+    private void cerrarPerfil()
+    {
+        ModalPerfil = false;
+        StateHasChanged(); 
+    }
+}
+
+<script>
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme); 
+    }
+
+    function getTheme() {
+        return localStorage.getItem('theme') || 'light'; 
+    }
+
+    window.addEventListener('load', () => {
+        const savedTheme = getTheme();
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    });
+</script>

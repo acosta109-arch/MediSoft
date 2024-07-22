@@ -1,0 +1,88 @@
+﻿@page "/Doctores/Details/{DoctorId:int}"
+@using MediSoft.Models
+@using MediSoft.Services
+@inject NavigationManager NavigationManager
+@inject DoctoresService doctoresService
+
+@rendermode InteractiveServer
+
+<div class="card-header text-center bg-primary">
+    <h3 class="text-white"><strong>Detalles del Doctor</strong></h3>
+</div>
+
+@if (doctor != null)
+{
+    <div style="background-color: white;">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="bg-secondary text-white">ID:</div>
+                <div class="text-black">@doctor.DoctorId</div>
+            </div>
+            <div class="col-md-3">
+                <div class="bg-secondary text-white">Nombre:</div>
+                <div class="text-black">@doctor.Nombre</div>
+            </div>
+            <div class="col-md-3">
+                <div class="bg-secondary text-white">Apellido:</div>
+                <div class="text-black">@doctor.Apellido</div>
+            </div>
+            <div class="col-md-3">
+                <div class="bg-secondary text-white">Teléfono:</div>
+                <div class="text-black">@doctor.Telefono</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="bg-secondary text-white">Email:</div>
+                <div class="text-black">@doctor.Email</div>
+            </div>
+        </div>
+
+        <div class="card-header text-center bg-primary">
+            <h3 class="text-white"><strong>Detalles del Doctor</strong></h3>
+        </div>
+
+        @if (doctor.DetalleDoctores != null)
+        {
+            <div style="background-color: white;">
+                <table class="table table-bordered">
+                    <thead class="bg-secondary text-white">
+                        <tr>
+                            <th>Especialidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detalle in doctor.DetalleDoctores)
+                        {
+                            <tr>
+                                <td>@detalle.Especialidad</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="card-footer bg-light d-flex justify-content-end">
+                    <div class="btn-group">
+                        <a type="button" href="/Doctores/Index" class="btn btn-outline-danger"><span class="fas fa-arrow-left"></span> Volver </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    public Doctores? doctor = new Doctores();
+
+    [Parameter]
+    public int DoctorId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await BuscarDoctor();
+    }
+
+    public async Task BuscarDoctor()
+    {
+        doctor = await doctoresService.Buscar(DoctorId);
+    }
+}

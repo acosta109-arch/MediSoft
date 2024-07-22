@@ -1,0 +1,151 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@inject AutentificacionService AutentificacionService
+@code {
+    private bool isAdmin;
+    private bool isLoading = true;
+    private bool subMenuConsultar = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isAdmin = await AutentificacionService.IsUserInRoleAsync("Administrador");
+        isLoading = false;
+    }
+
+    private void ToggleSubMenu()
+    {
+        subMenuConsultar = !subMenuConsultar;
+    }
+}
+
+@if (isLoading)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="top-row navbar navbar-dark bg-primary fixed-width">
+        <div class="container-fluid">
+            <a class="navbar-brand text-dark" href=""><img style="width: 32px; height: 32px; margin-right: 5px;" src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" /><strong>   MediSoft</strong></a>
+        </div>
+    </div>
+
+    <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+        <nav class="flex-column bg-primary full-height-nav">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link text-white" href="" Match="NavLinkMatch.All">
+                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/2782/2782728.png" /> Dashboard
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <a class="nav-link text-white" href="#" @onclick="ToggleSubMenu">
+                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/760/760621.png" /> Consultar
+                </a>
+                @if (subMenuConsultar)
+                {
+                    <div class="nav-item pl-5">
+                        <NavLink class="nav-link text-white" href="/DisponibilidadesCards">
+                            Mis citas
+                        </NavLink>
+                    </div>
+                    <div class="nav-item pl-5">
+                        <NavLink class="nav-link text-white" href="/Citas/Index">
+                            Turnos de citas
+                        </NavLink>
+                    </div>
+                }
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link text-white" href="/Disponibilidades/Index">
+                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/1572/1572562.png" /> Disponibilidad
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link text-white" href="/Pacientes/Index">
+                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/706/706215.png" /> Pacientes
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link text-white" href="/Doctores/Index">
+                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/3461/3461551.png" /> Doctores
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link text-white" href="/Doctores/Index">
+                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/600/600805.png" /> Noticias
+                </NavLink>
+            </div>
+        </nav>
+    </div>
+}
+
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+    }
+
+    .fixed-width {
+        width: 250px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .top-row {
+        position: sticky;
+        top: 0;
+        z-index: 1020;
+    }
+
+    .full-height-nav {
+        height: calc(100vh - 56px);
+        position: fixed;
+        top: 56px;
+        left: 0;
+        width: 250px;
+        overflow-y: auto;
+    }
+
+    .navbar-dark .navbar-toggler {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-dark .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.5%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+
+    .nav-scrollable {
+        background-color: linear-gradient(180deg, #007bff, #0056b3);;
+        height: calc(100vh - 56px);
+        position: fixed;
+        top: 56px;
+        left: 0;
+        width: 250px;
+        overflow-y: auto;
+    }
+
+    .nav-link {
+        color: white;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+        .nav-link:hover {
+            background-color: #0056b3;
+        }
+
+        .nav-link.active {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+        }
+
+    .nav-item {
+        margin-bottom: 10px;
+    }
+</style>

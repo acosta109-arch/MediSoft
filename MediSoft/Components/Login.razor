@@ -1,0 +1,57 @@
+﻿@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
+@inject NotificationService NotificationService
+
+<RadzenNotification />
+
+<PageTitle>Iniciar Sesión</PageTitle>
+
+<div style="height: 100vh; background-image: url('https://eldinero.com.do/wp-content/uploads/Salud-tecnologi%CC%81a.webp'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+    <div class="container d-flex justify-content-center align-items-center h-100">
+        <div class="card p-4" style="max-width: 500px; background-color: rgba(255, 255, 255, 0.9); border-radius: 15px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <img src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" alt="Login Icon" style="width: 100px; height: 100px;" />
+                    <h2 class="mt-3">Iniciar Sesión</h2>
+                    <h4>Bienvenido/a a MediSoft</h4>
+                </div>
+                <form>
+                    <div class="form-group">
+                        <label for="usuario">Usuario</label>
+                        <input type="text" class="form-control" id="usuario" aria-describedby="usuarioHelp"
+                               placeholder="Ingrese su usuario" @bind="usuario.Usuario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contrasena">Contraseña</label>
+                        <input type="password" class="form-control" id="contrasena" placeholder="Ingrese su contraseña"
+                               @bind="usuario.Contrasena" required>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-outline-success mt-3 bi bi-cursor-fill" @onclick="Acceder">  Acceder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+	private Usuarios usuario = new Usuarios();
+
+	protected override async void OnAfterRender(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await AutentificacionService.Verificar(JSRuntime);
+		}
+	}
+
+	public async Task Acceder()
+	{
+		await AutentificacionService.Acceder(JSRuntime, UsuariosService, NotificationService, this.usuario.Usuario, this.usuario.Contrasena);
+		this.usuario.Usuario = "";
+		this.usuario.Contrasena = "";
+	}
+}

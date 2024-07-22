@@ -1,0 +1,195 @@
+﻿@page "/Disponibilidades/Index"
+@inject DisponibilidadService disponibilidadService
+@inject NavigationManager navigation
+
+<PageTitle>Disponibilidades</PageTitle>
+
+<style>
+    .card {
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+    .form-control, .form-select {
+        border: 2px solid #ced4da; /* Darker border color */
+        border-radius: 50px; /* Oval shape */
+        box-shadow: none; /* Remove default shadow */
+        background-color: #f8f9fa; /* Slightly darker white background */
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #495057; /* Darker border color on focus */
+            box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1); /* Optional: subtle shadow on focus */
+        }
+
+    .input-group .form-control {
+        border-radius: 50px 0 0 50px; /* Oval shape with rounded left edge */
+    }
+
+    .input-group .btn {
+        border-radius: 0 50px 50px 0; /* Oval shape with rounded right edge */
+        background-color: #007bff; /* Primary button color */
+        color: white;
+        border: none;
+    }
+
+        .input-group .btn:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+
+    .card-header {
+        background-color: #007bff; /* Match button color */
+    }
+
+    .table-striped {
+        background-color: #f8f9fa; /* Slightly darker white for rows */
+    }
+
+    .btn-custom {
+        border-radius: 50px;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row mb-3 align-items-end">
+        <div class="col-md-3">
+            <label for="Filtro" class="form-label"><strong>Filtrar por:</strong></label>
+            <InputSelect id="filtro" class="form-select" @bind-Value="filtro">
+                <option value="" disabled>Seleccionar</option>
+                <option value="id">Id</option>
+                <option value="doctor">Doctor</option>
+                <option value="especialidad">Especialidad</option>
+                <option value="dias">Días de Disponibilidad</option>
+            </InputSelect>
+        </div>
+        <div class="col-md-6">
+            <label for="ValorFiltro" class="form-label"><strong>Búsqueda:</strong></label>
+            <div class="input-group">
+                <input @bind="valorFiltro" class="form-control" placeholder="Buscar" />
+                <button @onclick="Buscar" class="btn btn-primary" type="button">
+                    <span class="bi bi-search-heart-fill"></span> Buscar
+                </button>
+            </div>
+        </div>
+        <div class="col-md-3 text-end mt-3 mt-md-0">
+            <a href="/Disponibilidades/Create" class="btn btn-success bi bi-plus-circle-fill"> Crear</a>
+        </div>
+    </div>
+
+    <div class="card shadow-lg">
+        @*Header*@
+        <div class="card-header text-white">
+            <h3><strong>Disponibilidades</strong></h3>
+        </div>
+
+        @*Body*@
+        <div class="card-body">
+            <table class="table table-striped table-bordered mt-3">
+                <thead class="table-striped table-secondary text-black">
+                    <tr>
+                        <th>Id</th>
+                        <th>Doctor</th>
+                        <th>Especialidad</th>
+                        <th>Días de Disponibilidad</th>
+                        <th>Hora Inicio</th>
+                        <th>Hora Fin</th>
+                        <th>Consultorio</th>
+                        <th>Detalles</th>
+                        <th>Modificar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var disponibilidad in disponibilidadesFiltradas)
+                    {
+                        <tr>
+                            <td>@disponibilidad.DisponibilidadId</td>
+                            <td>@disponibilidad.Doctor?.Nombre @disponibilidad.Doctor?.Apellido</td>
+                            <td>@disponibilidad.Especialidad</td>
+                            <td>@disponibilidad.DiasDisponibilidad</td>
+                            <td>@ConvertTo12HourFormat(disponibilidad.HoraInicio)</td>
+                            <td>@ConvertTo12HourFormat(disponibilidad.HoraFin)</td>
+                            <td>@disponibilidad.Consultorio</td>
+                            <td class="text-center">
+                                <a href="/Disponibilidades/Details/@disponibilidad.DisponibilidadId" class="btn btn-primary bi bi-binoculars-fill"> </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="/Disponibilidades/Edit/@disponibilidad.DisponibilidadId" class="btn btn-secondary bi bi-pencil-fill"> </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="/Disponibilidades/Delete/@disponibilidad.DisponibilidadId" class="btn btn-danger bi bi-trash-fill"> </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Disponibilidades> disponibilidades = new List<Disponibilidades>();
+    public List<Disponibilidades> disponibilidadesFiltradas = new List<Disponibilidades>();
+    public string filtro { get; set; } = "id";
+    public string valorFiltro { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        disponibilidades = await disponibilidadService.ListarDisponibilidades();
+        disponibilidadesFiltradas = disponibilidades;
+    }
+
+    private void Buscar()
+    {
+        if (string.IsNullOrEmpty(valorFiltro))
+        {
+            disponibilidadesFiltradas = disponibilidades;
+        }
+        else
+        {
+            switch (filtro)
+            {
+                case "id":
+                    if (int.TryParse(valorFiltro, out int id))
+                    {
+                        disponibilidadesFiltradas = disponibilidades.Where(d => d.DisponibilidadId == id).ToList();
+                    }
+                    break;
+                case "doctor":
+                    disponibilidadesFiltradas = disponibilidades
+                        .Where(d => d.Doctor != null &&
+                                    (d.Doctor.Nombre + " " + d.Doctor.Apellido)
+                                    .Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "especialidad":
+                    disponibilidadesFiltradas = disponibilidades
+                        .Where(d => d.Especialidad.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "dias":
+                    disponibilidadesFiltradas = disponibilidades
+                        .Where(d => d.DiasDisponibilidad.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+            }
+        }
+    }
+
+    private string ConvertTo12HourFormat(string hora)
+    {
+        if (TimeSpan.TryParse(hora, out TimeSpan time))
+        {
+            var period = time.Hours >= 12 ? "P.M." : "A.M.";
+            var hour12 = time.Hours % 12;
+            hour12 = hour12 == 0 ? 12 : hour12; // Handle midnight case
+            return $"{hour12:D2}:{time.Minutes:D2} {period}";
+        }
+        return hora; // Return the original string if parsing fails
+    }
+}

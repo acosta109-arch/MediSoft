@@ -1,0 +1,133 @@
+﻿@page "/Disponibilidades/Create"
+@using Microsoft.AspNetCore.Mvc.Rendering
+@inject DisponibilidadService DisponibilidadService
+@inject DoctoresService DoctoresService
+@inject NavigationManager navigation
+
+<PageTitle>Crear Disponibilidad</PageTitle>
+<EditForm Model="nuevaDisponibilidad" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
+    <div class="container">
+        <div class="card shadow-lg">
+            @* Header *@
+            <div class="card-header bg-primary text-white">
+                <h2><strong>Crear Disponibilidad</strong></h2>
+            </div>
+            @* Body *@
+            <div class="card-body">
+                @* Doctor *@
+                <label class="form-label" for="doctorSelect"><strong>Seleccionar Doctor</strong></label>
+                <InputSelect id="doctorSelect" class="form-control" @bind-Value="nuevaDisponibilidad.DoctorId">
+                    <option value="">Seleccione un doctor</option>
+                    @foreach (var doctor in doctores)
+                    {
+                        <option value="@doctor.DoctorId">@doctor.Nombre @doctor.Apellido</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => nuevaDisponibilidad.DoctorId)" />
+
+                @* Especialidad *@
+                <label class="form-label" for="especialidad"><strong>Especialidad</strong></label>
+                <InputText id="especialidad" class="form-control" @bind-Value="nuevaDisponibilidad.Especialidad" />
+                <ValidationMessage For="@(() => nuevaDisponibilidad.Especialidad)" />
+
+                @* Días de Disponibilidad *@
+                <label class="form-label" for="diasDisponibilidad"><strong>Días de Disponibilidad</strong></label>
+                <InputText id="diasDisponibilidad" class="form-control" @bind-Value="nuevaDisponibilidad.DiasDisponibilidad" />
+                <ValidationMessage For="@(() => nuevaDisponibilidad.DiasDisponibilidad)" />
+
+                @* Horas *@
+                <div class="form-group">
+                    <label class="form-label" for="horaInicio"><strong>Hora Inicio</strong></label>
+                    <InputSelect id="horaInicio" class="form-control" @bind-Value="nuevaDisponibilidad.HoraInicio">
+                        <option value="">Seleccione una hora</option>
+                        @foreach (var hora in GetHoras())
+                        {
+                            <option value="@hora.Value">@hora.Text</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => nuevaDisponibilidad.HoraInicio)" />
+
+                    <label class="form-label" for="horaFin"><strong>Hora Fin</strong></label>
+                    <InputSelect id="horaFin" class="form-control" @bind-Value="nuevaDisponibilidad.HoraFin">
+                        <option value="">Seleccione una hora</option>
+                        @foreach (var hora in GetHoras())
+                        {
+                            <option value="@hora.Value">@hora.Text</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => nuevaDisponibilidad.HoraFin)" />
+                </div>
+
+                @* Consultorio *@
+                <label class="form-label" for="consultorio"><strong>Consultorio</strong></label>
+                <InputText id="consultorio" class="form-control" @bind-Value="nuevaDisponibilidad.Consultorio" />
+                <ValidationMessage For="@(() => nuevaDisponibilidad.Consultorio)" />
+            </div>
+            @* Footer *@
+            <div class="card-footer">
+                <button type="button" class="btn btn-secondary bi bi-arrow-left" @onclick="Volver">Volver</button>
+                <button type="submit" class="btn btn-success bi bi-floppy-fill">Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private List<Doctores> doctores = new List<Doctores>();
+    private Disponibilidades nuevaDisponibilidad = new Disponibilidades();
+    private List<ToastMessage> MensajeToast = new List<ToastMessage>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        doctores = await DoctoresService.ListarDoctores();
+    }
+
+    private List<SelectListItem> GetHoras()
+    {
+        var horas = new List<SelectListItem>();
+        for (int i = 0; i < 24; i++)
+        {
+            // Convertir la hora de formato de 24 horas a 12 horas
+            var hora12 = i % 12 == 0 ? 12 : i % 12;
+            var periodo = i < 12 ? "AM" : "PM";
+            var horaTexto = $"{hora12:D2}:00 {periodo}";
+            horas.Add(new SelectListItem { Value = i.ToString("00") + ":00", Text = horaTexto });
+        }
+        return horas;
+    }
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
+
+    private void Mensaje(ToastType toastType, string mensaje)
+    {
+        MensajeToast.Add(CreateToastMessage(toastType, mensaje));
+    }
+
+    public async Task Guardar()
+    {
+        try
+        {
+            await DisponibilidadService.Guardar(nuevaDisponibilidad);
+            Mensaje(ToastType.Success, "Disponibilidad guardada correctamente.");
+            nuevaDisponibilidad = new Disponibilidades(); // Limpiar el formulario
+        }
+        catch (Exception ex)
+        {
+            Mensaje(ToastType.Danger, $"Ocurrió un error: {ex.Message}");
+        }
+    }
+
+    public void Volver()
+    {
+        navigation.NavigateTo("/Disponibilidades/Index");
+    }
+}

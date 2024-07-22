@@ -1,0 +1,160 @@
+﻿@page "/Citas/Index"
+@inject CitasService citasService
+@inject NavigationManager navigation
+
+<PageTitle>Citas</PageTitle>
+
+<style>
+    .card {
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+    .form-control, .form-select {
+        border: 2px solid #ced4da; /* Darker border color */
+        border-radius: 50px; /* Oval shape */
+        box-shadow: none; /* Remove default shadow */
+        background-color: #f8f9fa; /* Slightly darker white background */
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #495057; /* Darker border color on focus */
+            box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1); /* Optional: subtle shadow on focus */
+        }
+
+    .input-group .form-control {
+        border-radius: 50px 0 0 50px; /* Oval shape with rounded left edge */
+    }
+
+    .input-group .btn {
+        border-radius: 0 50px 50px 0; /* Oval shape with rounded right edge */
+        background-color: #007bff; /* Primary button color */
+        color: white;
+        border: none;
+    }
+
+        .input-group .btn:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+
+    .card-header {
+        background-color: #007bff; /* Match button color */
+    }
+
+    .table-striped {
+        background-color: #f8f9fa; /* Slightly darker white for rows */
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row mb-3 align-items-end">
+        <div class="col-md-3">
+            <label for="Filtro" class="form-label"><strong>Filtrar por:</strong></label>
+            <InputSelect id="filtro" class="form-select" @bind-Value="filtro">
+                <option value="" disabled>Seleccionar</option>
+                <option value="doctor">Doctor</option>
+                <option value="paciente">Paciente</option>
+                <option value="fecha">Fecha</option>
+            </InputSelect>
+        </div>
+        <div class="col-md-6">
+            <label for="ValorFiltro" class="form-label"><strong>Búsqueda:</strong></label>
+            <div class="input-group">
+                <input @bind="valorFiltro" class="form-control" placeholder="Buscar" />
+                <button @onclick="Buscar" class="btn btn-primary" type="button">
+                    <span class="bi bi-search-heart-fill"></span> Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-lg">
+        @* Header *@
+        <div class="card-header text-white">
+            <h3><strong>Citas</strong></h3>
+        </div>
+
+        @* Body *@
+        <div class="card-body">
+            <table class="table table-striped table-bordered mt-3">
+                <thead class="table-striped table-secondary text-black">
+                    <tr>
+                        <th>Turno</th>
+                        <th>Nombre Paciente</th>
+                        <th>Apellido Paciente</th>
+                        <th>Cédula</th>
+                        <th>Teléfono</th>
+                        <th>Doctor</th>
+                        <th>Fecha y Hora</th>
+                        <th>Causa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cita in citasFiltradas.Select((c, index) => new { Cita = c, Turno = index + 1 }))
+                    {
+                        <tr>
+                            <td>@cita.Turno</td>
+                            <td>@cita.Cita.Nombre</td>
+                            <td>@cita.Cita.Apellido</td>
+                            <td>@cita.Cita.Cedula</td>
+                            <td>@cita.Cita.Telefono</td>
+                            <td>@cita.Cita.Doctor?.Nombre @cita.Cita.Doctor?.Apellido</td>
+                            <td>@cita.Cita.Fecha.ToString("dd/MM/yyyy hh:mm tt")</td>
+                            <td>@cita.Cita.Causa</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Citas> citas = new List<Citas>();
+    public List<Citas> citasFiltradas = new List<Citas>();
+    public string filtro { get; set; } = "doctor";
+    public string valorFiltro { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        citas = await citasService.ListarCitas();
+        citasFiltradas = citas;
+    }
+
+    private void Buscar()
+    {
+        if (string.IsNullOrEmpty(valorFiltro))
+        {
+            citasFiltradas = citas;
+        }
+        else
+        {
+            switch (filtro)
+            {
+                case "doctor":
+                    citasFiltradas = citas
+                        .Where(c => c.Doctor != null &&
+                                    (c.Doctor.Nombre + " " + c.Doctor.Apellido)
+                                    .Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "paciente":
+                    citasFiltradas = citas
+                        .Where(c => (c.Nombre + " " + c.Apellido)
+                                    .Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    break;
+                case "fecha":
+                    if (DateTime.TryParse(valorFiltro, out DateTime fecha))
+                    {
+                        citasFiltradas = citas.Where(c => c.Fecha.Date == fecha.Date).ToList();
+                    }
+                    break;
+            }
+        }
+    }
+}
