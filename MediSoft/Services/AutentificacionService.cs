@@ -112,7 +112,7 @@ public class AutentificacionService
     public async Task<bool> IsUserInRoleAsync(string role)
     {
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
+        var user = authState.User; 
         return user.IsInRole(role);
     }
 
