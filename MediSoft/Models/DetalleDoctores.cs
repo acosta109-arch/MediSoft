@@ -11,3 +11,4 @@ public class DetalleDoctores
     public string Especialidad { get; set; }
 
 }
+ 
