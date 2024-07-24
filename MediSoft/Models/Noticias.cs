@@ -13,3 +13,4 @@ public class Noticias
 	[Required(ErrorMessage = "El campo fecha es obligatorio.")]
     public DateTime Fecha { get; set; }
 }
+ 
