@@ -39,5 +39,4 @@ public class Usuarios
 	[Required(ErrorMessage = "El campo Rol es obligatorio.")]
 	public string? Rol { get; set; }
 
-    public string? FotoPerfil { get; set; }
 }
