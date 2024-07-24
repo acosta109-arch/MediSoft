@@ -25,3 +25,4 @@ public class Doctores
 
     public ICollection<DetalleDoctores> DetalleDoctores { get; set; } = new List<DetalleDoctores>();
 }
+ 
