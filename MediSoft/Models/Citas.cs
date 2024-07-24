@@ -38,3 +38,4 @@ public class Citas
     [Required(ErrorMessage = "Campo causa es obligatorio.")]
     public string Causa { get; set; } 
 }
+ 
