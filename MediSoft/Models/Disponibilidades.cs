@@ -28,4 +28,4 @@ public class Disponibilidades
 
     [Required(ErrorMessage = "Campo consultorio es obligatorio.")]
     public string Consultorio { get; set; }
-}
+} 
