@@ -36,5 +36,6 @@ public class Context : DbContext
 				Rol = "Administrador"
 
 			});
-	}
-}
+	} 
+}  
+ 
