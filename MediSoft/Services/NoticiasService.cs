@@ -15,7 +15,7 @@ public class NoticiasService
     }
 
     public async Task<bool> Existe(int id)
-    {
+    { 
         return await _contexto.Noticias.AnyAsync(n => n.NoticiaId == id);
     }
 
