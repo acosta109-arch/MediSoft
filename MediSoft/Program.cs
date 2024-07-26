@@ -20,7 +20,7 @@ namespace MediSoft
             // Connection string de sql
             var ConStr = builder.Configuration.GetConnectionString("ConStr");
             builder.Services.AddDbContext<Context>(options => options.UseSqlite(ConStr));
-            builder.Services.AddBlazorBootstrap();
+            builder.Services.AddBlazorBootstrap(); 
 
             // Inyecciones del service
             builder.Services.AddScoped<NotificationService>();
