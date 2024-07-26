@@ -15,7 +15,7 @@ namespace MediSoft
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
-                .AddInteractiveServerComponents();
+                .AddInteractiveServerComponents(); 
 
             // Connection string de sql
             var ConStr = builder.Configuration.GetConnectionString("ConStr");
