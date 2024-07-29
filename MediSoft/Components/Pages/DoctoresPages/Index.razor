@@ -6,19 +6,60 @@
 <PageTitle>Doctores</PageTitle>
 
 <style>
+    :root {
+        --primary-bg-color: #f8f9fa; /* Light background color */
+        --header-bg-color: #3b5998; /* Header background color */
+        --header-text-color: white; /* Header text color */
+        --table-header-bg-color: #3b5998; /* Table header background color */
+        --table-header-text-color: white; /* Table header text color */
+        --table-bg-color: white; /* Table background color */
+        --btn-primary-bg-color: #3b5998; /* Primary button background color */
+        --btn-secondary-bg-color: #6c757d; /* Secondary button background color */
+        --btn-danger-bg-color: #dc3545; /* Danger button background color */
+        --btn-text-color: white; /* Button text color */
+        --card-bg-color: white; /* Card background color */
+        --card-border-color: #ddd; /* Card border color */
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Card shadow */
+        --input-border-color: #ccc; /* Input border color */
+        --label-text-color: #000; /* Default label text color */
+    }
+
+    [data-theme="dark"] {
+        --primary-bg-color: #343a40; /* Dark background color */
+        --header-bg-color: #1e2125; /* Dark header background color */
+        --header-text-color: #e9ecef; /* Dark header text color */
+        --table-header-bg-color: #1e2125; /* Dark table header background color */
+        --table-header-text-color: #e9ecef; /* Dark table header text color */
+        --table-bg-color: #495057; /* Dark table background color */
+        --btn-primary-bg-color: #1e2125; /* Dark primary button background color */
+        --btn-secondary-bg-color: #6c757d; /* Dark secondary button background color */
+        --btn-danger-bg-color: #dc3545; /* Danger button background color */
+        --btn-text-color: #e9ecef; /* Dark button text color */
+        --card-bg-color: #495057; /* Dark card background color */
+        --card-border-color: #6c757d; /* Dark card border color */
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Dark card shadow */
+        --input-border-color: #6c757d; /* Dark input border color */
+        --label-text-color: #e9ecef; /* Label text color in dark mode */
+    }
+
+    body {
+        background-color: var(--primary-bg-color);
+        color: #212529;
+    }
+
     .container {
         max-width: 1200px;
         margin: auto;
         padding: 20px;
-        background-color: #ffffff; /* Fondo blanco para el contenedor principal */
+        background-color: var(--card-bg-color); /* Background color for the main container */
     }
 
     .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background-color: #3b5998;
-        color: white;
+        background-color: var(--header-bg-color);
+        color: var(--header-text-color);
         padding: 10px 20px;
         border-radius: 8px;
     }
@@ -37,22 +78,17 @@
         .filter-row .form-label {
             font-weight: bold;
             margin-right: 10px;
-        }
-
-        .filter-row .input-group {
-            flex-grow: 1;
-            margin-right: 10px;
+            color: var(--label-text-color); /* Use variable for label color */
         }
 
     .table-responsive {
         border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        background-color: #ffffff; /* Fondo blanco para la tabla */
+        box-shadow: var(--card-shadow);
     }
 
     .table thead {
-        background-color: #3b5998;
-        color: white;
+        background-color: var(--table-header-bg-color);
+        color: var(--table-header-text-color);
     }
 
     .table th, .table td {
@@ -70,25 +106,35 @@
         justify-content: center;
         padding: 0.5rem;
         border-radius: 50%;
-        color: white;
+        color: var(--btn-text-color);
         transition: background-color 0.2s ease;
     }
 
         .btn-icon.btn-primary {
-            background-color: #3b5998;
+            background-color: var(--btn-primary-bg-color);
         }
 
         .btn-icon.btn-secondary {
-            background-color: #6c757d;
+            background-color: var(--btn-secondary-bg-color);
         }
 
         .btn-icon.btn-danger {
-            background-color: #dc3545;
+            background-color: var(--btn-danger-bg-color);
         }
 
         .btn-icon:hover {
             filter: brightness(1.2);
         }
+
+    .form-control {
+        border-color: var(--input-border-color);
+    }
+
+    .card {
+        background-color: var(--card-bg-color);
+        border-color: var(--card-border-color);
+        box-shadow: var(--card-shadow);
+    }
 </style>
 
 <div class="container mt-5">
