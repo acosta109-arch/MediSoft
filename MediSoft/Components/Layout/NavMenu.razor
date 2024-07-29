@@ -23,14 +23,17 @@
 }
 else
 {
-    <div class="top-row navbar navbar-dark bg-primary fixed-width">
+    <div class="top-row navbar navbar-dark bg-facebook fixed-width">
         <div class="container-fluid">
-            <a class="navbar-brand text-dark" href=""><img style="width: 32px; height: 32px; margin-right: 5px;" src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" /><strong>   MediSoft</strong></a>
+            <a class="navbar-brand text-white" href="">
+                <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" />
+                <strong>MediSoft</strong>
+            </a>
         </div>
     </div>
 
     <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-        <nav class="flex-column bg-primary full-height-nav">
+        <nav class="flex-column bg-facebook full-height-nav">
             <div class="nav-item px-3">
                 <NavLink class="nav-link text-white" href="" Match="NavLinkMatch.All">
                     <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/2782/2782728.png" /> Dashboard
@@ -48,11 +51,6 @@ else
                             Mis citas
                         </NavLink>
                     </div>
-                    <div class="nav-item pl-5">
-                        <NavLink class="nav-link text-white" href="/Citas/Index">
-                            Turnos de citas
-                        </NavLink>
-                    </div>
                 }
             </div>
 
@@ -63,7 +61,7 @@ else
             </div>
 
             <div class="nav-item px-3">
-                <NavLink class="nav-link text-white" href="/Pacientes/Index">
+                <NavLink class="nav-link text-white" href="/Historial/Index">
                     <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/706/706215.png" /> Pacientes
                 </NavLink>
             </div>
@@ -118,7 +116,7 @@ else
     }
 
     .nav-scrollable {
-        background-color: linear-gradient(180deg, #007bff, #0056b3);;
+        background-color: #4267B2;
         height: calc(100vh - 56px);
         position: fixed;
         top: 56px;
@@ -133,11 +131,11 @@ else
     }
 
         .nav-link:hover {
-            background-color: #0056b3;
+            background-color: #365899;
         }
 
         .nav-link.active {
-            background-color: #0056b3;
+            background-color: #365899;
             color: white;
         }
 
@@ -147,5 +145,13 @@ else
 
     .nav-item {
         margin-bottom: 10px;
+    }
+
+    .bg-facebook {
+        background-color: #4267B2 !important;
+    }
+
+    .navbar-brand {
+        color: white !important;
     }
 </style>
