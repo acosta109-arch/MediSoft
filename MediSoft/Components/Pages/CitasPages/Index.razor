@@ -7,6 +7,8 @@
 <style>
     .card {
         transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        background-color: #4267B2; /* Facebook Blue */
+        color: white;
     }
 
         .card:hover {
@@ -40,12 +42,18 @@
         .input-group .btn:hover {
             background-color: #0056b3; /* Darker shade on hover */
         }
+
+    .btn-oval {
+        border-radius: 50px; /* Oval shape */
+        border: none;
+        padding: 0.375rem 0.75rem;
+    }
 </style>
 
 <div class="container mt-5">
     <div class="row mb-3 align-items-end">
         <div class="col-md-3">
-            <label for="Filtro" class="form-label"><strong>Filtrar por:</strong></label>
+            <label for="filtro" class="form-label"><strong>Filtrar por:</strong></label>
             <InputSelect id="filtro" class="form-select" @bind-Value="filtro">
                 <option value="" disabled>Seleccionar</option>
                 <option value="nombreDoctor">Nombre del Doctor</option>
@@ -54,7 +62,7 @@
             </InputSelect>
         </div>
         <div class="col-md-6">
-            <label for="ValorFiltro" class="form-label"><strong>Búsqueda:</strong></label>
+            <label for="valorFiltro" class="form-label"><strong>Búsqueda:</strong></label>
             <div class="input-group">
                 <input @bind="valorFiltro" class="form-control" placeholder="Buscar" />
                 <button @onclick="Buscar" class="btn btn-primary" type="button">
@@ -70,13 +78,29 @@
             @foreach (var disponibilidad in disponibilidadesFiltradas)
             {
                 <div class="col-md-4 mb-3">
-                    <div class="card bg-primary text-white">
+                    <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Dr: @disponibilidad.Doctor?.Nombre @disponibilidad.Doctor?.Apellido</h5>
                             <p class="card-text">Especialidad: @disponibilidad.Especialidad</p>
                             <p class="card-text">Disponibilidad: @disponibilidad.DiasDisponibilidad</p>
-                            <a href="/Disponibilidades/Details/@disponibilidad.DisponibilidadId" class="btn btn-info text-white">Ver Información</a>
-                            <a href="/Citas/Create/@disponibilidad.DisponibilidadId" class="btn btn-light">Realizar Cita</a>
+                            <div class="row">
+                                <div class="col-6 mb-2">
+                                    <a href="/Doctores/Details/@disponibilidad.DoctorId" class="btn btn-info text-white btn-oval w-100 mb-2">
+                                        Ver Información
+                                    </a>
+                                    <a href="/Citas/Index/@disponibilidad.DoctorId" class="btn btn-danger text-white btn-oval w-100">
+                                        Ver Citas
+                                    </a>
+                                </div>
+                                <div class="col-6 mb-2">
+                                    <a href="/Citas/Create/@disponibilidad.DisponibilidadId" class="btn btn-success text-white btn-oval w-100 mb-2">
+                                        Agregar Cita
+                                    </a>
+                                    <a href="/Citas/Gestionar/@disponibilidad.DisponibilidadId" class="btn btn-warning text-white btn-oval w-100">
+                                        Gestionar Cita
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
