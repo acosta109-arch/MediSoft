@@ -138,12 +138,12 @@
     }
 </style>
 
+<Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
 <div class="container mt-5">
     <div class="card shadow-lg border-0 rounded">
         <div class="header text-center">
             <h3><strong>Eliminar el doctor</strong></h3>
         </div>
-
         @if (doctor != null)
         {
             <h6 class="text-center bi bi-exclamation-triangle-fill text-warning"><strong>   ¿&Eacute;stas seguro de que quieres eliminar este doctor?</strong></h6>
@@ -218,6 +218,21 @@
 
     [Parameter]
     public int DoctorId { get; set; }
+    private List<ToastMessage> MensajeToast = new List<ToastMessage>();
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
+
+    private void Mensaje(ToastType toastType, string mensaje)
+    {
+        MensajeToast.Add(CreateToastMessage(toastType, mensaje));
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -234,7 +249,11 @@
         if (doctor != null)
         {
             await doctoresService.Eliminar(DoctorId);
-            NavigationManager.NavigateTo("/Doctores/Index");
+            Mensaje(ToastType.Success, "Doctor eliminado correctamente.");
+        }
+        else
+        {
+            Mensaje(ToastType.Danger, "El doctor no pudo ser correctamente.");
         }
     }
 }

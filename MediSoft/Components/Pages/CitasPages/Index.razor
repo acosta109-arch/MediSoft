@@ -7,51 +7,103 @@
 <style>
     .card {
         transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-        background-color: #4267B2; /* Facebook Blue */
-        color: white;
+        background-color: #4267B2; /* Color Facebook Blue */
+        color: white; /* Color de texto blanco para contraste */
+        border: 2px solid #28a745; /* Borde verde success */
+        border-radius: 12px; /* Bordes redondeados */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para profundidad */
     }
 
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            transform: translateY(-8px); /* Movimiento sutil hacia arriba al pasar el mouse */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada al pasar el mouse */
         }
 
-    .form-control, .form-select {
-        border: 2px solid #ced4da; /* Darker border color */
-        border-radius: 50px; /* Oval shape */
-        box-shadow: none; /* Remove default shadow */
-        background-color: #f8f9fa; /* Slightly darker white background */
+    .card-body {
+        padding: 20px; /* Espaciado interno para el contenido */
     }
 
-        .form-control:focus, .form-select:focus {
-            border-color: #495057; /* Darker border color on focus */
-            box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1); /* Optional: subtle shadow on focus */
+        .card-body img {
+            width: 32px; /* Tamaño de imagen más grande */
+            height: 32px;
+            margin-right: 15px; /* Espaciado entre imagen y texto */
+            border-radius: 50%; /* Imagen circular */
         }
 
-    .input-group .form-control {
-        border-radius: 50px 0 0 50px; /* Oval shape with rounded left edge */
+    .card-title {
+        font-size: 1.25rem; /* Tamaño de fuente para el título */
+        margin-bottom: 10px; /* Espaciado debajo del título */
     }
 
-    .input-group .btn {
-        border-radius: 0 50px 50px 0; /* Oval shape with rounded right edge */
-        background-color: #007bff; /* Primary button color */
-        color: white;
-        border: none;
+    .card-text {
+        font-size: 1rem; /* Tamaño de fuente para el texto */
+        margin-bottom: 10px; /* Espaciado debajo del texto */
     }
-
-        .input-group .btn:hover {
-            background-color: #0056b3; /* Darker shade on hover */
-        }
 
     .btn-oval {
-        border-radius: 50px; /* Oval shape */
+        border-radius: 50px; /* Bordes redondeados para los botones */
         border: none;
         padding: 0.375rem 0.75rem;
+        font-size: 0.875rem; /* Tamaño de fuente para los botones */
+        text-align: center; /* Centrar el texto en los botones */
     }
+
+    .btn-success {
+        background-color: #28a745; /* Color de fondo del botón */
+        color: white;
+    }
+
+        .btn-success:hover {
+            background-color: #218838; /* Color de fondo al pasar el mouse */
+        }
+
+    .header-icon {
+        width: 3rem; /* Mismo tamaño que el texto h1 */
+        height: 3rem; /* Mismo tamaño que el texto h1 */
+        margin-right: 10px;
+    }
+
+    .header-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 2.5rem; /* Tamaño de fuente para el h1 */
+        text-align: center;
+    }
+
+    .header-container {
+        margin-bottom: 20px; /* Espaciado debajo del encabezado */
+    }
+
+    .filter-row {
+        margin-bottom: 15px; /* Espaciado debajo de los filtros */
+    }
+
+    .no-results {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .no-results img {
+            width: 80px; /* Tamaño de la imagen */
+            height: 80px;
+        }
+
+        .no-results h3 {
+            margin-top: 10px;
+        }
 </style>
 
 <div class="container mt-5">
-    <div class="row mb-3 align-items-end">
+    <div class="row mb-3 header-container">
+        <div class="col-md-12 d-flex align-items-center justify-content-center">
+            <img class="header-icon" src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" alt="Icono" />
+            <h1 class="header-title">&Aacute;rea de citas m&eacute;dicas</h1>
+        </div>
+    </div>
+
+    <div class="row mb-3 filter-row">
         <div class="col-md-3">
             <label for="filtro" class="form-label"><strong>Filtrar por:</strong></label>
             <InputSelect id="filtro" class="form-select" @bind-Value="filtro">
@@ -80,23 +132,24 @@
                 <div class="col-md-4 mb-3">
                     <div class="card">
                         <div class="card-body">
+                            <img src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" alt="Medical Logo" />
                             <h5 class="card-title">Dr: @disponibilidad.Doctor?.Nombre @disponibilidad.Doctor?.Apellido</h5>
                             <p class="card-text">Especialidad: @disponibilidad.Especialidad</p>
                             <p class="card-text">Disponibilidad: @disponibilidad.DiasDisponibilidad</p>
                             <div class="row">
                                 <div class="col-6 mb-2">
-                                    <a href="/Doctores/Details/@disponibilidad.DoctorId" class="btn btn-info text-white btn-oval w-100 mb-2">
-                                        Ver Información
+                                    <a href="/Doctores/Details/@disponibilidad.DoctorId" class="btn btn-success btn-oval w-100 mb-2 bi bi-info-circle-fill">
+                                        Información
                                     </a>
-                                    <a href="/Citas/Index/@disponibilidad.DoctorId" class="btn btn-danger text-white btn-oval w-100">
-                                        Ver Citas
+                                    <a href="/Citas/Index/@disponibilidad.DoctorId" class="btn btn-success btn-oval w-100 bi bi-eye-fill">
+                                        Ver Turnos
                                     </a>
                                 </div>
                                 <div class="col-6 mb-2">
-                                    <a href="/Citas/Create/@disponibilidad.DisponibilidadId" class="btn btn-success text-white btn-oval w-100 mb-2">
+                                    <a href="/Citas/Create/@disponibilidad.DisponibilidadId" class="btn btn-success btn-oval w-100 mb-2 bi bi-person-fill-add">
                                         Agregar Cita
                                     </a>
-                                    <a href="/Citas/Gestionar/@disponibilidad.DisponibilidadId" class="btn btn-warning text-white btn-oval w-100">
+                                    <a href="/Citas/Gestionar/@disponibilidad.DisponibilidadId" class="btn btn-success btn-oval w-100 bi bi-back">
                                         Gestionar Cita
                                     </a>
                                 </div>
@@ -107,12 +160,20 @@
             }
         </div>
     }
+    else if (string.IsNullOrEmpty(valorFiltro))
+    {
+        <div class="text-center no-results">
+            <img src="https://cdn-icons-png.flaticon.com/512/599/599625.png" alt="No Results" />
+            <h3 class="mt-3">No hay doctores disponibles hasta el momento</h3>
+            <p>Por favor, volver mas tarde. Att: Administraci&oacute;n.</p>
+        </div>
+    }
     else
     {
-        <div class="text-center">
-            <img src="https://images.emojiterra.com/google/android-pie/512px/1f914.png" alt="No Results" style="width: 80px; height: 80px;" />
-            <h3 class="mt-3">No existe lo que está buscando</h3>
-            <p>Vuelva e inténtelo.</p>
+        <div class="text-center no-results">
+            <img src="https://images.emojiterra.com/google/android-pie/512px/1f914.png" alt="No Doctors Available" />
+            <h3 class="mt-3">Lo sentimos, no hay resultados con el filtro aplicado</h3>
+            <p>Vuelva a intentarlo con otros criterios.</p>
         </div>
     }
 </div>
@@ -141,8 +202,7 @@
             {
                 case "nombreDoctor":
                     disponibilidadesFiltradas = disponibilidades
-                        .Where(d => (d.Doctor?.Nombre.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                                    (d.Doctor?.Apellido.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase) ?? false))
+                        .Where(d => d.Doctor?.Nombre.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase) == true || d.Doctor?.Apellido.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase) == true)
                         .ToList();
                     break;
                 case "especialidad":
@@ -150,7 +210,7 @@
                         .Where(d => d.Especialidad.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
                         .ToList();
                     break;
-                    // Add additional filtering cases here if needed
+                    // Add more cases for other filters if needed
             }
         }
     }

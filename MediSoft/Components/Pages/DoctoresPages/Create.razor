@@ -9,7 +9,7 @@
 
 <EditForm Model="doctor" OnValidSubmit="Guardar" FormName="DoctorForm">
     <DataAnnotationsValidator />
-
+    <Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
     <div class="container mt-5">
         <div class="card shadow-lg border-0 rounded">
             <div class="header">
@@ -19,12 +19,12 @@
             <div class="card-body p-4">
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label class="form-label text-white">Nombre:</label>
+                        <label class="form-label text-black">Nombre:</label>
                         <InputText @bind-Value="doctor.Nombre" class="form-control" placeholder="Nombre del doctor" />
                         <ValidationMessage For="@(() => doctor.Nombre)" class="text-danger" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label text-white">Apellido:</label>
+                        <label class="form-label text-black">Apellido:</label>
                         <InputText @bind-Value="doctor.Apellido" class="form-control" placeholder="Apellido del doctor" />
                         <ValidationMessage For="@(() => doctor.Apellido)" class="text-danger" />
                     </div>
@@ -32,12 +32,12 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label class="form-label text-white">Teléfono:</label>
+                        <label class="form-label text-black">Teléfono:</label>
                         <InputText @bind-Value="doctor.Telefono" class="form-control" placeholder="Teléfono del doctor" />
                         <ValidationMessage For="@(() => doctor.Telefono)" class="text-danger" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label text-white">Email:</label>
+                        <label class="form-label text-black">Email:</label>
                         <InputText @bind-Value="doctor.Email" class="form-control" placeholder="Correo electrónico del doctor" />
                         <ValidationMessage For="@(() => doctor.Email)" class="text-danger" />
                     </div>
@@ -104,6 +104,21 @@
     private Doctores doctor = new Doctores();
     private DetalleDoctores detalleDoctor = new DetalleDoctores();
     private List<DetalleDoctores> listaDetallesDoctor = new List<DetalleDoctores>();
+    private List<ToastMessage> MensajeToast = new List<ToastMessage>();
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
+
+    private void Mensaje(ToastType toastType, string mensaje)
+    {
+        MensajeToast.Add(CreateToastMessage(toastType, mensaje));
+    }
 
     public async Task Guardar()
     {
@@ -111,22 +126,11 @@
         {
             doctor.DetalleDoctores = listaDetallesDoctor;
             await doctoresService.Guardar(doctor);
-            notificationService.Notify(new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Success,
-                    Summary = "Éxito",
-                    Detail = "Doctor creado correctamente"
-                });
-            NavigationManager.NavigateTo("/Doctores/Index");
+            Mensaje(ToastType.Success, "Doctor guardado correctamente.");
         }
         else
         {
-            notificationService.Notify(new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Warning,
-                    Summary = "Advertencia",
-                    Detail = "Debe agregar al menos una especialidad"
-                });
+            Mensaje(ToastType.Danger, "El doctor no pudo ser guardado correctamente.");
         }
     }
 
