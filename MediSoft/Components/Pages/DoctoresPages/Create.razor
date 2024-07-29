@@ -19,12 +19,12 @@
             <div class="card-body p-4">
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label class="form-label">Nombre:</label>
+                        <label class="form-label text-white">Nombre:</label>
                         <InputText @bind-Value="doctor.Nombre" class="form-control" placeholder="Nombre del doctor" />
                         <ValidationMessage For="@(() => doctor.Nombre)" class="text-danger" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Apellido:</label>
+                        <label class="form-label text-white">Apellido:</label>
                         <InputText @bind-Value="doctor.Apellido" class="form-control" placeholder="Apellido del doctor" />
                         <ValidationMessage For="@(() => doctor.Apellido)" class="text-danger" />
                     </div>
@@ -32,12 +32,12 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label class="form-label">Teléfono:</label>
+                        <label class="form-label text-white">Teléfono:</label>
                         <InputText @bind-Value="doctor.Telefono" class="form-control" placeholder="Teléfono del doctor" />
                         <ValidationMessage For="@(() => doctor.Telefono)" class="text-danger" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Email:</label>
+                        <label class="form-label text-white">Email:</label>
                         <InputText @bind-Value="doctor.Email" class="form-control" placeholder="Correo electrónico del doctor" />
                         <ValidationMessage For="@(() => doctor.Email)" class="text-danger" />
                     </div>
@@ -51,7 +51,7 @@
 
                 <div class="row mb-3">
                     <div class="col-md-10">
-                        <label class="form-label">Especialidad:</label>
+                        <label class="form-label text-white">Especialidad:</label>
                         <InputText class="form-control" @bind-Value="detalleDoctor.Especialidad" placeholder="Ingrese la especialidad" />
                         <ValidationMessage For="@(() => detalleDoctor.Especialidad)" class="text-danger" />
                     </div>
@@ -76,7 +76,7 @@
                                     <tr>
                                         <td>@item.Especialidad</td>
                                         <td>
-                                            <button type="button" class="btn btn-danger btn-icon" @onclick="(() => EliminarDetalle(item))"><i class="bi bi-trash3-fill"></i></button>
+                                            <button type="button" class="btn btn-danger" @onclick="(() => EliminarDetalle(item))"><i class="bi bi-trash3-fill"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -93,7 +93,7 @@
             </div>
 
             <div class="card-footer bg-light d-flex justify-content-between">
-                <a href="/Doctores/Index" class="btn btn-outline-danger btn-custom"><i class="fas fa-arrow-left"></i> Volver</a>
+                <a href="/Doctores/Index" class="btn btn-danger btn-custom"><i class="fas fa-arrow-left"></i> Volver</a>
                 <button type="submit" class="btn btn-success btn-custom"><i class="bi bi-save-fill"></i> Guardar</button>
             </div>
         </div>
@@ -164,7 +164,7 @@
         --card-border-color: #ddd; /* Card border color */
         --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Card shadow */
         --input-border-color: #ccc; /* Input border color */
-        --label-text-color: #000; /* Default label text color */
+        --label-text-color: white; /* Default label text color */
     }
 
     [data-theme="dark"] {
@@ -266,5 +266,9 @@
         background-color: var(--card-bg-color);
         border-color: var(--card-border-color);
         box-shadow: var(--card-shadow);
+    }
+
+    .form-label {
+        color: var(--label-text-color);
     }
 </style>
