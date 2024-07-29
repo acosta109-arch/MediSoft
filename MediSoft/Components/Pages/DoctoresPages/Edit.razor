@@ -1,0 +1,293 @@
+﻿@page "/Doctores/Edit/{id:int}"
+@using MediSoft.Models
+@using MediSoft.Services
+
+@inject NavigationManager NavigationManager
+@inject DoctoresService doctoresService
+@inject NotificationService notificationService
+@rendermode InteractiveServer
+
+<EditForm Model="doctor" OnValidSubmit="Guardar" FormName="DoctorForm">
+    <DataAnnotationsValidator />
+
+    <div class="container mt-5">
+        <div class="card shadow-lg border-0 rounded">
+            <div class="header">
+                <h3><strong>Modificar el Doctor</strong></h3>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-white">Nombre:</label>
+                        <InputText @bind-Value="doctor.Nombre" class="form-control" placeholder="Nombre del doctor" />
+                        <ValidationMessage For="@(() => doctor.Nombre)" class="text-danger" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-white">Apellido:</label>
+                        <InputText @bind-Value="doctor.Apellido" class="form-control" placeholder="Apellido del doctor" />
+                        <ValidationMessage For="@(() => doctor.Apellido)" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-white">Teléfono:</label>
+                        <InputText @bind-Value="doctor.Telefono" class="form-control" placeholder="Teléfono del doctor" />
+                        <ValidationMessage For="@(() => doctor.Telefono)" class="text-danger" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-white">Email:</label>
+                        <InputText @bind-Value="doctor.Email" class="form-control" placeholder="Correo electrónico del doctor" />
+                        <ValidationMessage For="@(() => doctor.Email)" class="text-danger" />
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="header mb-3">
+                    <h4><strong>Especialidades del Doctor</strong></h4>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-10">
+                        <label class="form-label text-white">Especialidad:</label>
+                        <InputText class="form-control" @bind-Value="detalleDoctor.Especialidad" placeholder="Ingrese la especialidad" />
+                        <ValidationMessage For="@(() => detalleDoctor.Especialidad)" class="text-danger" />
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="button" class="btn btn-success w-100 btn-custom" @onclick="AgregarDetalle"><i class="bi bi-plus-circle-fill"></i> Agregar</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Especialidad</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (listaDetallesDoctor.Any())
+                            {
+                                @foreach (var item in listaDetallesDoctor)
+                                {
+                                    <tr>
+                                        <td>@item.Especialidad</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger" @onclick="(() => EliminarDetalle(item))"><i class="bi bi-trash3-fill"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="2">No hay especialidades...</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card-footer bg-light d-flex justify-content-between">
+                <a href="/Doctores/Index" class="btn btn-danger btn-custom"><i class="fas fa-arrow-left"></i> Volver</a>
+                <button type="submit" class="btn btn-success btn-custom"><i class="bi bi-save-fill"></i> Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public int id { get; set; }
+    private Doctores doctor = new Doctores();
+    private DetalleDoctores detalleDoctor = new DetalleDoctores();
+    private List<DetalleDoctores> listaDetallesDoctor = new List<DetalleDoctores>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        doctor = await doctoresService.Buscar(id) ?? new Doctores();
+        listaDetallesDoctor = doctor.DetalleDoctores?.ToList() ?? new List<DetalleDoctores>();
+    }
+
+    public async Task Guardar()
+    {
+        if (listaDetallesDoctor.Count > 0)
+        {
+            doctor.DetalleDoctores = listaDetallesDoctor;
+            bool result = await doctoresService.Guardar(doctor);
+            if (result)
+            {
+                notificationService.Notify(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Success,
+                        Summary = "Éxito",
+                        Detail = "Doctor actualizado correctamente"
+                    });
+                NavigationManager.NavigateTo("/Doctores/Index");
+            }
+            else
+            {
+                notificationService.Notify(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Error",
+                        Detail = "No se pudo actualizar el doctor. Intente nuevamente."
+                    });
+            }
+        }
+        else
+        {
+            notificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Warning,
+                    Summary = "Advertencia",
+                    Detail = "Debe agregar al menos una especialidad"
+                });
+        }
+    }
+
+    private void AgregarDetalle()
+    {
+        if (!string.IsNullOrEmpty(detalleDoctor.Especialidad))
+        {
+            listaDetallesDoctor.Add(new DetalleDoctores
+                {
+                    Especialidad = detalleDoctor.Especialidad
+                });
+            detalleDoctor.Especialidad = string.Empty;
+        }
+    }
+
+    private void EliminarDetalle(DetalleDoctores detalle)
+    {
+        listaDetallesDoctor.Remove(detalle);
+    }
+}
+
+<style>
+    :root {
+        --primary-bg-color: #f8f9fa; /* Light background color */
+        --header-bg-color: #3b5998; /* Header background color */
+        --header-text-color: white; /* Header text color */
+        --table-header-bg-color: #3b5998; /* Table header background color */
+        --table-header-text-color: white; /* Table header text color */
+        --table-bg-color: white; /* Table background color */
+        --btn-primary-bg-color: #3b5998; /* Primary button background color */
+        --btn-secondary-bg-color: #6c757d; /* Secondary button background color */
+        --btn-danger-bg-color: #dc3545; /* Danger button background color */
+        --btn-text-color: white; /* Button text color */
+        --card-bg-color: white; /* Card background color */
+        --card-border-color: #ddd; /* Card border color */
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Card shadow */
+        --input-border-color: #ccc; /* Input border color */
+        --label-text-color: white; /* Default label text color */
+    }
+
+    [data-theme="dark"] {
+        --primary-bg-color: #343a40; /* Dark background color */
+        --header-bg-color: #1e2125; /* Dark header background color */
+        --header-text-color: #e9ecef; /* Dark header text color */
+        --table-header-bg-color: #1e2125; /* Dark table header background color */
+        --table-header-text-color: #e9ecef; /* Dark table header text color */
+        --table-bg-color: #495057; /* Dark table background color */
+        --btn-primary-bg-color: #1e2125; /* Dark primary button background color */
+        --btn-secondary-bg-color: #6c757d; /* Dark secondary button background color */
+        --btn-danger-bg-color: #dc3545; /* Danger button background color */
+        --btn-text-color: #e9ecef; /* Dark button text color */
+        --card-bg-color: #495057; /* Dark card background color */
+        --card-border-color: #6c757d; /* Dark card border color */
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Dark card shadow */
+        --input-border-color: #6c757d; /* Dark input border color */
+        --label-text-color: #e9ecef; /* Label text color in dark mode */
+    }
+
+    body {
+        background-color: var(--primary-bg-color);
+        color: #212529;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--header-bg-color);
+        color: var(--header-text-color);
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
+
+    .filter-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+        .filter-row .form-label {
+            font-weight: bold;
+            margin-right: 10px;
+            color: var(--label-text-color); /* Use variable for label color */
+        }
+
+    .table-responsive {
+        border-radius: 8px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .table thead {
+        background-color: var(--table-header-bg-color);
+        color: var(--table-header-text-color);
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .btn-custom {
+        border-radius: 50px;
+        font-size: 0.9rem;
+    }
+
+    .btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+        border-radius: 50%;
+        color: var(--btn-text-color);
+        transition: background-color 0.2s ease;
+    }
+
+        .btn-icon.btn-primary {
+            background-color: var(--btn-primary-bg-color);
+        }
+
+        .btn-icon.btn-secondary {
+            background-color: var(--btn-secondary-bg-color);
+        }
+
+        .btn-icon.btn-danger {
+            background-color: var(--btn-danger-bg-color);
+        }
+
+        .btn-icon:hover {
+            filter: brightness(1.2);
+        }
+
+    .form-control {
+        border-color: var(--input-border-color);
+    }
+
+    .card {
+        background-color: var(--card-bg-color);
+        border-color: var(--card-border-color);
+        box-shadow: var(--card-shadow);
+    }
+
+    .form-label {
+        color: var(--label-text-color);
+    }
+</style>
