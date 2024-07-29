@@ -7,25 +7,58 @@
 @rendermode InteractiveServer
 
 <style>
-    .container {
-        max-width: 1200px;
-        margin: auto;
-        padding: 20px;
+    :root {
+        --primary-bg-color: #f8f9fa; /* Light background color */
+        --header-bg-color: #3b5998; /* Header background color */
+        --header-text-color: white; /* Header text color */
+        --table-header-bg-color: #3b5998; /* Table header background color */
+        --table-header-text-color: white; /* Table header text color */
+        --table-bg-color: white; /* Table background color */
+        --btn-primary-bg-color: #3b5998; /* Primary button background color */
+        --btn-secondary-bg-color: #6c757d; /* Secondary button background color */
+        --btn-danger-bg-color: #dc3545; /* Danger button background color */
+        --btn-text-color: white; /* Button text color */
+        --card-bg-color: white; /* Card background color */
+        --card-border-color: #ddd; /* Card border color */
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Card shadow */
+        --input-border-color: #ccc; /* Input border color */
+        --label-text-color: #000; /* Default label text color */
+        --text-color: #000; /* Default text color */
+    }
+
+    [data-theme="dark"] {
+        --primary-bg-color: #343a40; /* Dark background color */
+        --header-bg-color: #1e2125; /* Dark header background color */
+        --header-text-color: #e9ecef; /* Dark header text color */
+        --table-header-bg-color: #1e2125; /* Dark table header background color */
+        --table-header-text-color: #e9ecef; /* Dark table header text color */
+        --table-bg-color: #495057; /* Dark table background color */
+        --btn-primary-bg-color: #1e2125; /* Dark primary button background color */
+        --btn-secondary-bg-color: #6c757d; /* Dark secondary button background color */
+        --btn-danger-bg-color: #dc3545; /* Danger button background color */
+        --btn-text-color: #e9ecef; /* Dark button text color */
+        --card-bg-color: #495057; /* Dark card background color */
+        --card-border-color: #6c757d; /* Dark card border color */
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Dark card shadow */
+        --input-border-color: #6c757d; /* Dark input border color */
+        --label-text-color: #e9ecef; /* Label text color in dark mode */
+        --text-color: #e9ecef; /* Dark text color */
+    }
+
+    body {
+        background-color: var(--primary-bg-color);
+        color: var(--text-color);
     }
 
     .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background-color: #3b5998;
-        color: white;
+        background-color: var(--header-bg-color);
+        color: var(--header-text-color);
         padding: 10px 20px;
         border-radius: 8px;
     }
-
-        .header h3 {
-            margin: 0;
-        }
 
     .filter-row {
         display: flex;
@@ -37,21 +70,17 @@
         .filter-row .form-label {
             font-weight: bold;
             margin-right: 10px;
-        }
-
-        .filter-row .input-group {
-            flex-grow: 1;
-            margin-right: 10px;
+            color: var(--label-text-color); /* Use variable for label color */
         }
 
     .table-responsive {
         border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--card-shadow);
     }
 
     .table thead {
-        background-color: #3b5998;
-        color: white;
+        background-color: var(--table-header-bg-color);
+        color: var(--table-header-text-color);
     }
 
     .table th, .table td {
@@ -69,37 +98,43 @@
         justify-content: center;
         padding: 0.5rem;
         border-radius: 50%;
-        color: white;
+        color: var(--btn-text-color);
         transition: background-color 0.2s ease;
     }
 
         .btn-icon.btn-primary {
-            background-color: #3b5998;
+            background-color: var(--btn-primary-bg-color);
         }
 
         .btn-icon.btn-secondary {
-            background-color: #6c757d;
+            background-color: var(--btn-secondary-bg-color);
         }
 
         .btn-icon.btn-danger {
-            background-color: #dc3545;
+            background-color: var(--btn-danger-bg-color);
         }
 
         .btn-icon:hover {
             filter: brightness(1.2);
         }
 
+    .form-control {
+        border-color: var(--input-border-color);
+    }
+
+    .card {
+        background-color: var(--card-bg-color);
+        border-color: var(--card-border-color);
+        box-shadow: var(--card-shadow);
+        color: var(--text-color);
+    }
+
     .detail-label {
-        background-color: #6c757d;
-        color: white;
-        padding: 5px;
-        border-radius: 5px;
+        font-weight: bold;
     }
 
     .detail-value {
-        background-color: white;
-        padding: 5px;
-        border-radius: 5px;
+        color: var(--text-color);
     }
 </style>
 
@@ -169,7 +204,7 @@
                 }
 
                 <div class="card-footer bg-light d-flex justify-content-end mt-3">
-                    <a href="/Doctores/Index" class="btn btn-outline-danger btn-custom"><i class="fas fa-arrow-left"></i> Volver</a>
+                    <a href="/Doctores/Index" class="btn btn-danger btn-custom"><i class="fas fa-arrow-left"></i> Volver</a>
                 </div>
             </div>
         }
