@@ -9,11 +9,7 @@ public class Usuarios
 
 	[Required(ErrorMessage = "El campo Nombre es obligatorio.")]
 	[RegularExpression(@"^[A-ZÁÉÍÓÚÑ][a-zA-ZÁÉÍÓÚÑ ]*$", ErrorMessage = "El nombre debe comenzar con una letra mayúscula y solo puede contener letras y espacios.")]
-	public string? Nombre { get; set; }
-
-	[Required(ErrorMessage = "El campo Apellido es obligatorio.")]
-	[RegularExpression(@"^[A-ZÁÉÍÓÚÑ][a-zA-ZÁÉÍÓÚÑ ]*$", ErrorMessage = "El apellido debe comenzar con una letra mayúscula y solo puede contener letras y espacios.")]
-	public string? Apellido { get; set; }
+	public string? NombreCompleto { get; set; }
 
 	[Required(ErrorMessage = "El campo Cédula es obligatorio.")]
 	[RegularExpression(@"^\d{11}$", ErrorMessage = "La cédula debe tener exactamente 11 dígitos.")]
