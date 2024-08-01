@@ -12,7 +12,6 @@ public class Context : DbContext
 	public DbSet<Disponibilidades> Disponibilidades { get; set; }
 	public DbSet<Doctores> Doctores { get; set; }
 	public DbSet<Noticias> Noticias { get; set; }
-	public DbSet<Pacientes> Pacientes { get; set; }
 	public DbSet<Usuarios> Usuarios { get; set; }
 
 	public DbSet<DetalleDoctores> DetalleDoctores { get; set; }
@@ -25,8 +24,7 @@ public class Context : DbContext
 			new Usuarios
 			{
 				UsuarioId = 1,
-				Nombre = "Administrador",
-				Apellido = "Del Sistema",
+				NombreCompleto = "Administrador del sistema",
 				Cedula = "12345678900",
 				Usuario = "administrador",
 				Contrasena = "Admin12345@@",
