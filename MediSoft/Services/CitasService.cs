@@ -16,7 +16,7 @@ public class CitasService
      
     public async Task<bool> Existe(int id)
     {
-        return await _contexto.Citas.AnyAsync(c => c.Id == id);
+        return await _contexto.Citas.AnyAsync(c => c.CitaId == id);
     }
 
     private async Task<bool> Insertar(Citas cita)
@@ -33,7 +33,7 @@ public class CitasService
 
     public async Task<bool> Guardar(Citas cita)
     {
-        if (cita.Id == 0)
+        if (cita.CitaId == 0)
             return await Insertar(cita);
         else
             return await Modificar(cita);
@@ -53,7 +53,7 @@ public class CitasService
     public async Task<Citas?> Buscar(int id)
     {
         return await _contexto.Citas.AsNoTracking()
-        .FirstOrDefaultAsync(c => c.Id == id);
+        .FirstOrDefaultAsync(c => c.CitaId == id);
     }
 
     public async Task<List<Citas>> Listar(Expression<Func<Citas, bool>> criterio)
@@ -84,6 +84,14 @@ public class CitasService
     {
         return await _contexto.Citas.AsNoTracking()
             .Where(c => c.DoctorId == doctorId && c.Fecha.Date == fecha.Date)
+            .ToListAsync();
+    }
+
+    public async Task<List<Citas>> ListarCitasPorDoctor(int doctorId)
+    {
+        return await _contexto.Citas.AsNoTracking()
+            .Where(c => c.DoctorId == doctorId)
+            .Include(c => c.Doctor)
             .ToListAsync();
     }
 }
