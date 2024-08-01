@@ -46,7 +46,7 @@
                     </div>
                     <div class="row mb-2">
                         <label class="fw-bold">Nombre Completo:</label>
-                        <span>@usuario.Nombre @usuario.Apellido</span>
+                        <span>@usuario.NombreCompleto</span>
                     </div>
                     <div class="row mb-2">
                         <label class="fw-bold">Cédula:</label>
@@ -198,7 +198,7 @@
             if (usuarioActual != null)
             {
                 usuario = usuarioActual;
-                nombreCompleto = $"{usuario.Nombre} {usuario.Apellido}";
+                nombreCompleto = $"{usuario.NombreCompleto}";
             }
             else
             {
