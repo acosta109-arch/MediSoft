@@ -10,11 +10,7 @@ public class Doctores
 
 	[Required(ErrorMessage = "El campo Nombre es obligatorio")]
 	[RegularExpression(@"^[A-ZÁÉÍÓÚÑ][a-zA-ZÁÉÍÓÚÑ ]*$", ErrorMessage = "El nombre debe comenzar con una letra mayúscula y solo puede contener letras y espacios.")]
-	public string Nombre { get; set; }
-
-	[Required(ErrorMessage = "El campo Apellido es obligatorio")]
-	[RegularExpression(@"^[A-ZÁÉÍÓÚÑ][a-zA-ZÁÉÍÓÚÑ ]*$", ErrorMessage = "El apellido debe comenzar con una letra mayúscula y solo puede contener letras y espacios.")]
-	public string Apellido { get; set; }
+	public string NombreCompleto { get; set; }
 
 	[Required(ErrorMessage = "El campo Teléfono es obligatorio.")]
 	public string Telefono { get; set; }
@@ -22,6 +18,9 @@ public class Doctores
 	[Required(ErrorMessage = "El campo Email es obligatorio.")]
 	[EmailAddress(ErrorMessage = "El correo electrónico no es válido.")]
 	public string Email { get; set; }
+
+	[Required(ErrorMessage = "El campo Especialidad es obligatorio.")]
+	public string Especialidad { get; set; }
 
     public ICollection<DetalleDoctores> DetalleDoctores { get; set; } = new List<DetalleDoctores>();
 }
