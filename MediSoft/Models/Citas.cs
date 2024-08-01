@@ -7,15 +7,11 @@ namespace MediSoft.Models;
 public class Citas
 {
     [Key]
-    public int Id { get; set; }
+    public int CitaId { get; set; }
 
     [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
     [RegularExpression(@"^[A-ZÁÉÍÓÚÑ][a-zA-ZÁÉÍÓÚÑ ]*$", ErrorMessage = "El nombre debe comenzar con una letra mayúscula y solo puede contener letras y espacios.")]
-    public string Nombre { get; set; }
-
-    [Required(ErrorMessage = "El campo Apellido es obligatorio")]
-    [RegularExpression(@"^[A-ZÁÉÍÓÚÑ][a-zA-ZÁÉÍÓÚÑ ]*$", ErrorMessage = "El apellido debe comenzar con una letra mayúscula y solo puede contener letras y espacios.")]
-    public string Apellido { get; set; }
+    public string NombreCompleto { get; set; }
 
     [Required(ErrorMessage = "El campo Cédula es obligatorio.")]
     [RegularExpression(@"^\d{11}$", ErrorMessage = "La cédula debe tener exactamente 11 dígitos.")]
@@ -36,6 +32,6 @@ public class Citas
     public DateTime Fecha { get; set; }
 
     [Required(ErrorMessage = "Campo causa es obligatorio.")]
-    public string Causa { get; set; } 
+    public string Motivo { get; set; } 
 }
  
