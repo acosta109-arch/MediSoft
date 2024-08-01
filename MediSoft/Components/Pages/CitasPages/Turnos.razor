@@ -86,12 +86,11 @@
                 <thead class="table-striped table-secondary text-black">
                     <tr>
                         <th>Turno</th>
-                        <th>Nombre Paciente</th>
-                        <th>Apellido Paciente</th>
+                        <th>Nombre completo</th>
                         <th>Cédula</th>
                         <th>Teléfono</th>
                         <th>Fecha y Hora</th>
-                        <th>Causa</th>
+                        <th>Motivo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,12 +98,11 @@
                     {
                         <tr>
                             <td>@cita.Turno</td>
-                            <td>@cita.Cita.Nombre</td>
-                            <td>@cita.Cita.Apellido</td>
+                            <td>@cita.Cita.NombreCompleto</td>
                             <td>@cita.Cita.Cedula</td>
                             <td>@cita.Cita.Telefono</td>
                             <td>@cita.Cita.Fecha.ToString("dd/MM/yyyy hh:mm tt")</td>
-                            <td>@cita.Cita.Causa</td>
+                            <td>@cita.Cita.Motivo</td>
                         </tr>
                     }
                 </tbody>
@@ -140,7 +138,7 @@
             {
                 case "paciente":
                     citasFiltradas = citas
-                        .Where(c => (c.Nombre + " " + c.Apellido)
+                        .Where(c => (c.NombreCompleto)
                                     .Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
                         .ToList();
                     break;

@@ -133,8 +133,8 @@
                     <div class="card">
                         <div class="card-body">
                             <img src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" alt="Medical Logo" />
-                            <h5 class="card-title">Dr: @disponibilidad.Doctor?.Nombre @disponibilidad.Doctor?.Apellido</h5>
-                            <p class="card-text">Especialidad: @disponibilidad.Especialidad</p>
+                            <h5 class="card-title">Dr: @disponibilidad.Doctor?.NombreCompleto</h5>
+                            <p class="card-text">Especialidad: @disponibilidad.Doctor?.Especialidad</p>
                             <p class="card-text">Disponibilidad: @disponibilidad.DiasDisponibilidad</p>
                             <div class="row">
                                 <div class="col-6 mb-2">
@@ -202,12 +202,12 @@
             {
                 case "nombreDoctor":
                     disponibilidadesFiltradas = disponibilidades
-                        .Where(d => d.Doctor?.Nombre.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase) == true || d.Doctor?.Apellido.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase) == true)
+                        .Where(d => d.Doctor?.NombreCompleto.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase) == true)
                         .ToList();
                     break;
                 case "especialidad":
                     disponibilidadesFiltradas = disponibilidades
-                        .Where(d => d.Especialidad.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
+                        .Where(d => d.Doctor?.Especialidad.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase) == true)
                         .ToList();
                     break;
                     // Add more cases for other filters if needed

@@ -22,15 +22,21 @@
                     <option value="">Seleccione un doctor</option>
                     @foreach (var doctor in doctores)
                     {
-                        <option value="@doctor.DoctorId">@doctor.Nombre @doctor.Apellido</option>
+                        <option value="@doctor.DoctorId">@doctor.NombreCompleto</option>
                     }
                 </InputSelect>
                 <ValidationMessage For="@(() => nuevaDisponibilidad.DoctorId)" />
 
                 @* Especialidad *@
-                <label class="form-label" for="especialidad"><strong>Especialidad</strong></label>
-                <InputText id="especialidad" class="form-control" @bind-Value="nuevaDisponibilidad.Especialidad" />
-                <ValidationMessage For="@(() => nuevaDisponibilidad.Especialidad)" />
+                <label class="form-label" for="especialidadSelect"><strong>Especialidad</strong></label>
+                <InputSelect id="especialidadSelect" class="form-control" @bind-Value="nuevaDisponibilidad.DoctorId">
+                    <option value="">Especialidad del doctor</option>
+                    @foreach (var doctor in doctores)
+                    {
+                        <option value="@doctor.DoctorId">@doctor.Especialidad</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => nuevaDisponibilidad.DoctorId)" />
 
                 @* Días de Disponibilidad *@
                 <label class="form-label" for="diasDisponibilidad"><strong>Días de Disponibilidad</strong></label>

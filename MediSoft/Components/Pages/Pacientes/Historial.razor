@@ -1,9 +1,8 @@
-﻿@page "/Disponibilidades/Index"
-@rendermode InteractiveServer
-@inject DisponibilidadService disponibilidadService
+﻿@page "/Historial/Index"
+@inject CitasService citasService
 @inject NavigationManager navigation
 
-<PageTitle>Disponibilidades</PageTitle>
+<PageTitle>Citas</PageTitle>
 
 <style>
     :root {
@@ -139,19 +138,17 @@
 
 <div class="container mt-5">
     <div class="header">
-        <h3><strong>Disponibilidades</strong></h3>
-        <a href="/Disponibilidades/Create" class="btn btn-success bi bi-plus-circle-fill btn-custom"> Crear</a>
+        <h3><strong>Historial de pacientes</strong></h3>
     </div>
 
     <div class="filter-row">
         <div class="d-flex align-items-center">
-            <label for="Filtro" class="form-label">Filtrar por:</label>
+            <label for="Filtro" class="form-label"><strong>Filtrar por:</strong></label>
             <InputSelect id="filtro" class="form-select" @bind-Value="filtro">
                 <option value="" disabled>Seleccionar</option>
-                <option value="id">DisponibilidadId</option>
                 <option value="doctor">Doctor</option>
-                <option value="especialidad">Especialidad</option>
-                <option value="dias">Días</option>
+                <option value="paciente">Paciente</option>
+                <option value="fecha">Fecha</option>
             </InputSelect>
         </div>
         <div class="input-group">
@@ -167,35 +164,27 @@
             <thead class="table-striped table-secondary text-black">
                 <tr>
                     <th>ID</th>
+                    <th>Nombre completo</th>
+                    <th>Cédula</th>
+                    <th>Número de seguro</th>
+                    <th>Teléfono</th>
                     <th>Doctor</th>
-                    <th>Especialidad</th>
-                    <th>Días</th>
-                    <th>Hora Inicio</th>
-                    <th>Hora Fin</th>
-                    <th>Detalles</th>
-                    <th>Modificar</th>
-                    <th>Eliminar</th>
+                    <th>Fecha y Hora</th>
+                    <th>Motivo</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var disponibilidad in disponibilidadesFiltradas)
+                @foreach (var cita in citasFiltradas)
                 {
                     <tr>
-                        <td>DISP-@disponibilidad.DisponibilidadId</td>
-                        <td>@disponibilidad.Doctor.NombreCompleto</td>
-                        <td>@disponibilidad.Doctor.Especialidad</td>
-                        <td>@disponibilidad.DiasDisponibilidad</td>
-                        <td>@ConvertTo12HourFormat(disponibilidad.HoraInicio)</td>
-                        <td>@ConvertTo12HourFormat(disponibilidad.HoraFin)</td>
-                        <td class="text-center">
-                            <a href="/Disponibilidades/Details/@disponibilidad.DisponibilidadId" class="btn-icon btn-primary bi bi-binoculars-fill"> </a>
-                        </td>
-                        <td class="text-center">
-                            <a href="/Disponibilidades/Edit/@disponibilidad.DisponibilidadId" class="btn-icon btn-secondary bi bi-pencil-fill"> </a>
-                        </td>
-                        <td class="text-center">
-                            <a href="/Disponibilidades/Delete/@disponibilidad.DisponibilidadId" class="btn-icon btn-danger bi bi-trash-fill"> </a>
-                        </td>
+                        <td>PA-@cita.CitaId</td>
+                        <td>@cita.NombreCompleto</td>
+                        <td>@cita.Cedula</td>
+                        <td>@cita.NumeroSeguro</td>
+                        <td>@cita.Telefono</td>
+                        <td>@cita.Doctor?.NombreCompleto</td>
+                        <td>@cita.Fecha.ToString("dd/MM/yyyy hh:mm tt")</td>
+                        <td>@cita.Motivo</td>
                     </tr>
                 }
             </tbody>
@@ -204,54 +193,47 @@
 </div>
 
 @code {
-    public List<Disponibilidades> disponibilidades = new List<Disponibilidades>();
-    public List<Disponibilidades> disponibilidadesFiltradas = new List<Disponibilidades>();
-    public string filtro { get; set; } = "id";
+    public List<Citas> citas = new List<Citas>();
+    public List<Citas> citasFiltradas = new List<Citas>();
+    public string filtro { get; set; } = "doctor";
     public string valorFiltro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        disponibilidades = await disponibilidadService.ListarDisponibilidades();
-        disponibilidadesFiltradas = disponibilidades;
+        citas = await citasService.ListarCitas();
+        citasFiltradas = citas;
     }
 
     private void Buscar()
     {
         if (string.IsNullOrEmpty(valorFiltro))
         {
-            disponibilidadesFiltradas = disponibilidades;
+            citasFiltradas = citas;
         }
         else
         {
             switch (filtro)
             {
-                case "id":
-                    if (int.TryParse(valorFiltro, out int id))
-                    {
-                        disponibilidadesFiltradas = disponibilidades.Where(d => d.DisponibilidadId == id).ToList();
-                    }
-                    break;
                 case "doctor":
-                    disponibilidadesFiltradas = disponibilidades.Where(d => d.Doctor != null &&
-                        $"{d.Doctor.NombreCompleto}".Contains(valorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
+                    citasFiltradas = citas
+                        .Where(c => c.Doctor != null &&
+                                    (c.Doctor.NombreCompleto)
+                                    .Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
                     break;
-                case "especialidad":
-                    disponibilidadesFiltradas = disponibilidades.Where(d => d.Doctor != null &&
-                        $"{d.Doctor.Especialidad}".Contains(valorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
+                case "paciente":
+                    citasFiltradas = citas
+                        .Where(c => (c.NombreCompleto)
+                                    .Contains(valorFiltro, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
                     break;
-                case "dias":
-                    disponibilidadesFiltradas = disponibilidades.Where(d => d.DiasDisponibilidad.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
+                case "fecha":
+                    if (DateTime.TryParse(valorFiltro, out DateTime fecha))
+                    {
+                        citasFiltradas = citas.Where(c => c.Fecha.Date == fecha.Date).ToList();
+                    }
                     break;
             }
         }
-    }
-
-    private string ConvertTo12HourFormat(string time24)
-    {
-        if (DateTime.TryParseExact(time24, "HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime time))
-        {
-            return time.ToString("hh:mm tt");
-        }
-        return time24;
     }
 }

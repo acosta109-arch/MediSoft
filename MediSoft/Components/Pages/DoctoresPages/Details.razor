@@ -153,16 +153,16 @@
                         <div class="detail-value">@doctor.DoctorId</div>
                     </div>
                     <div class="col-md-3">
-                        <div class="detail-label">Nombre:</div>
-                        <div class="detail-value">@doctor.Nombre</div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="detail-label">Apellido:</div>
-                        <div class="detail-value">@doctor.Apellido</div>
+                        <div class="detail-label">Nombre completo:</div>
+                        <div class="detail-value">@doctor.NombreCompleto</div>
                     </div>
                     <div class="col-md-3">
                         <div class="detail-label">Teléfono:</div>
                         <div class="detail-value">@doctor.Telefono</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-label">Especialidad:</div>
+                        <div class="detail-value">@doctor.Especialidad</div>
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -175,7 +175,7 @@
                 <hr />
 
                 <div class="header text-center">
-                    <h4><strong>Especialidades del Doctor</strong></h4>
+                    <h4><strong>D&iacute;as de disponibilidad del Doctor</strong></h4>
                 </div>
 
                 @if (doctor.DetalleDoctores != null && doctor.DetalleDoctores.Any())
@@ -184,14 +184,14 @@
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>Especialidad</th>
+                                    <th>D&iacute;as de disponibilidad</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var detalle in doctor.DetalleDoctores)
                                 {
                                     <tr>
-                                        <td>@detalle.Especialidad</td>
+                                        <td>@detalle.DiasDisponibilidad</td>
                                     </tr>
                                 }
                             </tbody>

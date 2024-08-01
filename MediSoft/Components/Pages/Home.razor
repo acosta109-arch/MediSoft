@@ -1,5 +1,5 @@
 ﻿@page "/"
-@inject PacientesService pacientesService
+
 
 <style>
     .card {
@@ -69,7 +69,7 @@
                 </div>
                 <div class="card-body">
                     <img src="https://cdn-icons-png.flaticon.com/512/706/706215.png" alt="Medical Icon">
-                    <p class="card-text">Registrados: @pacientesCount</p>
+                    <p class="card-text">Registrados: 100</p>
                 </div>
             </div>
         </div>
@@ -163,10 +163,5 @@
 </div>
 
 @code {
-    private int pacientesCount;
 
-    protected override async Task OnInitializedAsync()
-    {
-        pacientesCount = await pacientesService.GetPacientesCountAsync();
-    }
 }

@@ -166,8 +166,8 @@
             <thead class="table-striped table-secondary text-black">
                 <tr>
                     <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
+                    <th>Nombre completo</th>
+                    <th>Especialidad</th>
                     <th>Teléfono</th>
                     <th>Email</th>
                     <th>Detalles</th>
@@ -180,8 +180,8 @@
                 {
                     <tr>
                         <td>DR-@doctor.DoctorId</td>
-                        <td>@doctor.Nombre</td>
-                        <td>@doctor.Apellido</td>
+                        <td>@doctor.NombreCompleto</td>
+                        <td>@doctor.Especialidad</td>
                         <td>@doctor.Telefono</td>
                         <td>@doctor.Email</td>
                         <td class="text-center">
@@ -229,10 +229,7 @@
                     }
                     break;
                 case "nombre":
-                    doctoresFiltrados = doctores.Where(d => d.Nombre.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
-                    break;
-                case "apellido":
-                    doctoresFiltrados = doctores.Where(d => d.Apellido.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
+                    doctoresFiltrados = doctores.Where(d => d.NombreCompleto.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
                     break;
             }
         }

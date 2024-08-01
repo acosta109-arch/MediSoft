@@ -18,13 +18,8 @@
             <div class="card-body">
                 @* Nombre *@
                 <label class="form-label" for="nombre"><strong>Nombre</strong></label>
-                <InputText id="nombre" class="form-control" @bind-Value="nuevaCita.Nombre" />
-                <ValidationMessage For="@(() => nuevaCita.Nombre)" />
-
-                @* Apellido *@
-                <label class="form-label" for="apellido"><strong>Apellido</strong></label>
-                <InputText id="apellido" class="form-control" @bind-Value="nuevaCita.Apellido" />
-                <ValidationMessage For="@(() => nuevaCita.Apellido)" />
+                <InputText id="nombre" class="form-control" @bind-Value="nuevaCita.NombreCompleto" />
+                <ValidationMessage For="@(() => nuevaCita.NombreCompleto)" />
 
                 @* Cédula *@
                 <label class="form-label" for="cedula"><strong>Cédula</strong></label>
@@ -47,7 +42,7 @@
                     <option value="">Seleccione un doctor</option>
                     @foreach (var doctor in doctores)
                     {
-                        <option value="@doctor.DoctorId">@doctor.Nombre @doctor.Apellido</option>
+                        <option value="@doctor.DoctorId">@doctor.NombreCompleto</option>
                     }
                 </InputSelect>
                 <ValidationMessage For="@(() => nuevaCita.DoctorId)" />
@@ -58,9 +53,9 @@
                 <ValidationMessage For="@(() => nuevaCita.Fecha)" />
 
                 @* Causa *@
-                <label class="form-label" for="causa"><strong>Causa</strong></label>
-                <InputText id="causa" class="form-control" @bind-Value="nuevaCita.Causa" />
-                <ValidationMessage For="@(() => nuevaCita.Causa)" />
+                <label class="form-label" for="causa"><strong>Motivo</strong></label>
+                <InputText id="causa" class="form-control" @bind-Value="nuevaCita.Motivo" />
+                <ValidationMessage For="@(() => nuevaCita.Motivo)" />
             </div>
             @* Footer *@
             <div class="card-footer">
