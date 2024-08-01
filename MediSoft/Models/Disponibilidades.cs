@@ -14,10 +14,6 @@ public class Disponibilidades
     public int DoctorId { get; set; }
     public Doctores Doctor { get; set; }
 
-    [Required(ErrorMessage = "Campo especialidad es obligatorio.")]
-    public string Especialidad { get; set; }
-
-    [Required(ErrorMessage = "Campo de dias de disponibilidad es obligatorio. ")]
     public string DiasDisponibilidad { get; set; }
 
     [Required(ErrorMessage = "Campo hora de inicio es obligatorio.")]
