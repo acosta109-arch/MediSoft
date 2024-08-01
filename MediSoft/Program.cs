@@ -14,19 +14,20 @@ namespace MediSoft
             var builder = WebApplication.CreateBuilder(args); 
 
             // Add services to the container.
-            builder.Services.AddRazorComponents()
-                .AddInteractiveServerComponents(); 
-             
+            builder.Services.AddRazorComponents() 
+                .AddInteractiveServerComponents();
+
             // Connection string de sql
-            var ConStr = builder.Configuration.GetConnectionString("ConStr");
-            builder.Services.AddDbContext<Context>(options => options.UseSqlite(ConStr));
+            var connectionString = builder.Configuration.GetConnectionString("ConStr");
+            builder.Services.AddDbContext<Context>(options =>
+                options.UseSqlServer(connectionString));
+
             builder.Services.AddBlazorBootstrap(); 
              
             // Inyecciones del service
             builder.Services.AddScoped<NotificationService>();
             builder.Services.AddScoped<UsuariosService>();
             builder.Services.AddScoped<AutentificacionService>();
-            builder.Services.AddScoped<PacientesService>();
             builder.Services.AddScoped<CitasService>();
             builder.Services.AddScoped<DisponibilidadService>();
             builder.Services.AddScoped<DoctoresService>();
