@@ -20,6 +20,8 @@ Medisoft destaca por su interfaz amigable, que facilita la organización de cita
 ![JSON](https://img.shields.io/badge/JSON-%232C8EBB?logo=json&logoColor=white&style=flat-square)
 ![GitHub](https://img.shields.io/badge/GitHub-%23121011?logo=github&logoColor=white&style=flat-square)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-%23563D7C?logo=bootstrap&logoColor=white&style=flat-square)
+![Figma](https://img.shields.io/badge/Figma-%2349D1F6?logo=figma&logoColor=white&style=flat-square)
+![.NET 8](https://img.shields.io/badge/.NET_8-%2300A1E4?logo=dotnet&logoColor=white&style=flat-square)
 ![Entity Framework](https://img.shields.io/badge/Entity_Framework-%23006B37?logo=dotnet&logoColor=white&style=flat-square)
 ![SQL Server](https://img.shields.io/badge/SQL_Server-%234D6C7C?logo=microsoftsqlserver&logoColor=white&style=flat-square)
 ![Azure](https://img.shields.io/badge/Azure-%230072C6?logo=azure&logoColor=white&style=flat-square)
