@@ -168,10 +168,10 @@
                 <tr>
                     <th>ID</th>
                     <th>Doctor</th>
-                    <th>Especialidad</th>
                     <th>Días</th>
                     <th>Hora Inicio</th>
                     <th>Hora Fin</th>
+                    <th>Consultorio</th>
                     <th>Detalles</th>
                     <th>Modificar</th>
                     <th>Eliminar</th>
@@ -183,10 +183,10 @@
                     <tr>
                         <td>DISP-@disponibilidad.DisponibilidadId</td>
                         <td>@disponibilidad.Doctor.NombreCompleto</td>
-                        <td>@disponibilidad.Doctor.Especialidad</td>
                         <td>@disponibilidad.DiasDisponibilidad</td>
                         <td>@ConvertTo12HourFormat(disponibilidad.HoraInicio)</td>
                         <td>@ConvertTo12HourFormat(disponibilidad.HoraFin)</td>
+                        <td>@disponibilidad.Consultorio</td>
                         <td class="text-center">
                             <a href="/Disponibilidades/Details/@disponibilidad.DisponibilidadId" class="btn-icon btn-primary bi bi-binoculars-fill"> </a>
                         </td>

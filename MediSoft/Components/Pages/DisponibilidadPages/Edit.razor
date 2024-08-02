@@ -1,4 +1,4 @@
-﻿@page "/Disponibilidades/Create"
+﻿@page "/Disponibilidades/Edit/{DisponibilidadId:int}"
 @using MediSoft.Models
 @using MediSoft.Services
 @using Microsoft.AspNetCore.Mvc.Rendering
@@ -8,86 +8,93 @@
 @inject DoctoresService DoctoresService
 @inject NotificationService NotificationService
 
-<EditForm Model="nuevaDisponibilidad" OnValidSubmit="Guardar" FormName="DisponibilidadForm">
+<EditForm Model="disponibilidad" OnValidSubmit="Actualizar">
     <DataAnnotationsValidator />
+    <ValidationSummary />
     <Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
     <div class="container mt-5">
         <div class="card shadow-lg border-0 rounded">
             <div class="header">
-                <h3><strong>Crear nueva disponibilidad</strong></h3>
+                <h3><strong>Editar Disponibilidad</strong></h3>
             </div>
 
             <div class="card-body p-4">
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label text-black">Doctor:</label>
-                        <InputSelect @bind-Value="nuevaDisponibilidad.DoctorId" class="form-control">
+                        <InputSelect @bind-Value="disponibilidad.DoctorId" class="form-control">
                             <option value="">Seleccione un doctor</option>
                             @foreach (var doctor in doctores)
                             {
                                 <option value="@doctor.DoctorId">@doctor.NombreCompleto</option>
                             }
                         </InputSelect>
-                        <ValidationMessage For="@(() => nuevaDisponibilidad.DoctorId)" class="text-danger" />
+                        <ValidationMessage For="@(() => disponibilidad.DoctorId)" class="text-danger" />
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label text-black">Días de disponibilidad:</label>
-                        <InputText @bind-Value="nuevaDisponibilidad.DiasDisponibilidad" class="form-control" placeholder="Días de disponibilidad" />
-                        <ValidationMessage For="@(() => nuevaDisponibilidad.DiasDisponibilidad)" class="text-danger" />
+                        <InputText @bind-Value="disponibilidad.DiasDisponibilidad" class="form-control" placeholder="Días de disponibilidad" />
+                        <ValidationMessage For="@(() => disponibilidad.DiasDisponibilidad)" class="text-danger" />
                     </div>
                     <div class="col-md-6">
                         <label class="form-label text-black">Consultorio:</label>
-                        <InputText @bind-Value="nuevaDisponibilidad.Consultorio" class="form-control" placeholder="Consultorio" />
-                        <ValidationMessage For="@(() => nuevaDisponibilidad.Consultorio)" class="text-danger" />
+                        <InputText @bind-Value="disponibilidad.Consultorio" class="form-control" placeholder="Consultorio" />
+                        <ValidationMessage For="@(() => disponibilidad.Consultorio)" class="text-danger" />
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label text-black">Hora Inicio:</label>
-                        <InputSelect @bind-Value="nuevaDisponibilidad.HoraInicio" class="form-control">
+                        <InputSelect @bind-Value="disponibilidad.HoraInicio" class="form-control">
                             <option value="">Seleccione una hora</option>
                             @foreach (var hora in GetHoras())
                             {
                                 <option value="@hora.Value">@hora.Text</option>
                             }
                         </InputSelect>
-                        <ValidationMessage For="@(() => nuevaDisponibilidad.HoraInicio)" class="text-danger" />
+                        <ValidationMessage For="@(() => disponibilidad.HoraInicio)" class="text-danger" />
                     </div>
                     <div class="col-md-6">
                         <label class="form-label text-black">Hora Fin:</label>
-                        <InputSelect @bind-Value="nuevaDisponibilidad.HoraFin" class="form-control">
+                        <InputSelect @bind-Value="disponibilidad.HoraFin" class="form-control">
                             <option value="">Seleccione una hora</option>
                             @foreach (var hora in GetHoras())
                             {
                                 <option value="@hora.Value">@hora.Text</option>
                             }
                         </InputSelect>
-                        <ValidationMessage For="@(() => nuevaDisponibilidad.HoraFin)" class="text-danger" />
+                        <ValidationMessage For="@(() => disponibilidad.HoraFin)" class="text-danger" />
                     </div>
                 </div>
             </div>
 
             <div class="card-footer bg-light d-flex justify-content-between">
                 <a href="/Disponibilidades/Index" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Volver</a>
-                <button type="submit" class="btn btn-success"><i class="bi bi-save-fill"></i> Guardar</button>
+                <button type="submit" class="btn btn-success"><i class="bi bi-save-fill"></i> Guardar Cambios</button>
             </div>
         </div>
     </div>
 </EditForm>
 
 @code {
-    private Disponibilidades nuevaDisponibilidad = new Disponibilidades();
-    private List<Disponibilidades> listaDisponibilidades = new List<Disponibilidades>();
+    [Parameter]
+    public int DisponibilidadId { get; set; }
+
+    private Disponibilidades disponibilidad = new Disponibilidades();
     private List<Doctores> doctores = new List<Doctores>();
     private List<ToastMessage> MensajeToast = new List<ToastMessage>();
 
     protected override async Task OnInitializedAsync()
     {
         doctores = await DoctoresService.ListarDoctores();
+        if (DisponibilidadId != 0)
+        {
+            disponibilidad = await DisponibilidadService.ObtenerDisponibilidadPorId(DisponibilidadId) ?? new Disponibilidades();
+        }
     }
 
     private List<SelectListItem> GetHoras()
@@ -117,13 +124,21 @@
         MensajeToast.Add(CreateToastMessage(toastType, mensaje));
     }
 
-    public async Task Guardar()
+    public async Task Actualizar()
     {
         try
         {
-            await DisponibilidadService.Guardar(nuevaDisponibilidad);
-            Mensaje(ToastType.Success, "Disponibilidad guardada correctamente.");
-            nuevaDisponibilidad = new Disponibilidades();
+            Console.WriteLine($"Actualizando disponibilidad con ID {disponibilidad.DisponibilidadId}");
+            var result = await DisponibilidadService.Guardar(disponibilidad);
+            if (result)
+            {
+                Mensaje(ToastType.Success, "Disponibilidad actualizada correctamente.");
+                NavigationManager.NavigateTo("/Disponibilidades/Index", true);
+            }
+            else
+            {
+                Mensaje(ToastType.Danger, "No se pudo actualizar la disponibilidad.");
+            }
         }
         catch (Exception ex)
         {
@@ -131,10 +146,6 @@
         }
     }
 
-    private void EliminarDisponibilidad(Disponibilidades disponibilidad)
-    {
-        listaDisponibilidades.Remove(disponibilidad);
-    }
 }
 
 <style>
