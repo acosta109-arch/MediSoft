@@ -1,66 +1,80 @@
 ﻿@page "/Citas/Create/{CitaId:int}"
+@using MediSoft.Models
+@using MediSoft.Services
 @using Microsoft.AspNetCore.Mvc.Rendering
+
+@inject NavigationManager navigation
 @inject CitasService CitasService
 @inject DoctoresService DoctoresService
-@inject NavigationManager navigation
+@inject NotificationService NotificationService
 
-<PageTitle>Crear Cita</PageTitle>
 <EditForm Model="nuevaCita" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
     <Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
-    <div class="container">
-        <div class="card shadow-lg">
-            @* Header *@
-            <div class="card-header bg-primary text-white">
-                <h2><strong>Crear Cita</strong></h2>
+    <div class="container mt-5">
+        <div class="card shadow-lg border-0 rounded">
+            <div class="header">
+                <h3><strong>Crear Cita</strong></h3>
             </div>
-            @* Body *@
-            <div class="card-body">
-                @* Nombre *@
-                <label class="form-label" for="nombre"><strong>Nombre</strong></label>
-                <InputText id="nombre" class="form-control" @bind-Value="nuevaCita.NombreCompleto" />
-                <ValidationMessage For="@(() => nuevaCita.NombreCompleto)" />
 
-                @* Cédula *@
-                <label class="form-label" for="cedula"><strong>Cédula</strong></label>
-                <InputText id="cedula" class="form-control" @bind-Value="nuevaCita.Cedula" />
-                <ValidationMessage For="@(() => nuevaCita.Cedula)" />
+            <div class="card-body p-4">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-black">Nombre completo del paciente:</label>
+                        <InputText id="nombre" class="form-control" @bind-Value="nuevaCita.NombreCompleto" placeholder="Nombre completo de paciente" />
+                        <ValidationMessage For="@(() => nuevaCita.NombreCompleto)" class="text-danger" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-black">Cédula:</label>
+                        <InputText id="cedula" class="form-control" @bind-Value="nuevaCita.Cedula" placeholder="Cédula del paciente"/>
+                        <ValidationMessage For="@(() => nuevaCita.Cedula)" class="text-danger" />
+                    </div>
+                </div>
 
-                @* Número de Seguro Médico *@
-                <label class="form-label" for="numeroSeguro"><strong>Número de Seguro Médico</strong></label>
-                <InputText id="numeroSeguro" class="form-control" @bind-Value="nuevaCita.NumeroSeguro" />
-                <ValidationMessage For="@(() => nuevaCita.NumeroSeguro)" />
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-black">Número de Seguro Médico:</label>
+                        <InputText id="numeroSeguro" class="form-control" @bind-Value="nuevaCita.NumeroSeguro" placeholder="Número de seguro médico"/>
+                        <ValidationMessage For="@(() => nuevaCita.NumeroSeguro)" class="text-danger" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-black">Teléfono:</label>
+                        <InputText id="telefono" class="form-control" @bind-Value="nuevaCita.Telefono" placeholder="Teléfono"/>
+                        <ValidationMessage For="@(() => nuevaCita.Telefono)" class="text-danger" />
+                    </div>
+                </div>
 
-                @* Teléfono *@
-                <label class="form-label" for="telefono"><strong>Teléfono</strong></label>
-                <InputText id="telefono" class="form-control" @bind-Value="nuevaCita.Telefono" />
-                <ValidationMessage For="@(() => nuevaCita.Telefono)" />
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-black">Seleccionar Doctor:</label>
+                        <InputSelect id="doctorSelect" class="form-control" @bind-Value="nuevaCita.DoctorId">
+                            <option value="">Seleccione un doctor</option>
+                            @foreach (var doctor in doctores)
+                            {
+                                <option value="@doctor.DoctorId">@doctor.NombreCompleto</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => nuevaCita.DoctorId)" class="text-danger" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-black">Fecha y Hora:</label>
+                        <input type="datetime-local" class="form-control" @bind="nuevaCita.Fecha" />
+                        <ValidationMessage For="@(() => nuevaCita.Fecha)" class="text-danger" />
+                    </div>
+                </div>
 
-                @* Doctor *@
-                <label class="form-label" for="doctorSelect"><strong>Seleccionar Doctor</strong></label>
-                <InputSelect id="doctorSelect" class="form-control" @bind-Value="nuevaCita.DoctorId">
-                    <option value="">Seleccione un doctor</option>
-                    @foreach (var doctor in doctores)
-                    {
-                        <option value="@doctor.DoctorId">@doctor.NombreCompleto</option>
-                    }
-                </InputSelect>
-                <ValidationMessage For="@(() => nuevaCita.DoctorId)" />
-
-                @* Fecha y Hora *@
-                <label class="form-label" for="FechaHora"><strong>Fecha y Hora</strong></label>
-                <input type="datetime-local" class="form-control" @bind="nuevaCita.Fecha" />
-                <ValidationMessage For="@(() => nuevaCita.Fecha)" />
-
-                @* Causa *@
-                <label class="form-label" for="causa"><strong>Motivo</strong></label>
-                <InputText id="causa" class="form-control" @bind-Value="nuevaCita.Motivo" />
-                <ValidationMessage For="@(() => nuevaCita.Motivo)" />
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label text-black">Motivo:</label>
+                        <InputText id="causa" class="form-control" @bind-Value="nuevaCita.Motivo" placeholder="Motivo de cita"/>
+                        <ValidationMessage For="@(() => nuevaCita.Motivo)" class="text-danger" />
+                    </div>
+                </div>
             </div>
-            @* Footer *@
-            <div class="card-footer">
-                <button type="button" class="btn btn-secondary bi bi-arrow-left" @onclick="Volver">Volver</button>
-                <button type="submit" class="btn btn-success bi bi-floppy-fill">Guardar</button>
+
+            <div class="card-footer bg-light d-flex justify-content-between">
+                <button type="button" class="btn btn-danger btn-oval" @onclick="Volver"><i class="fas fa-arrow-left"></i> Volver</button>
+                <button type="submit" class="btn btn-success btn-oval"><i class="bi bi-save-fill"></i> Guardar</button>
             </div>
         </div>
     </div>
@@ -114,6 +128,105 @@
 
     public void Volver()
     {
-        navigation.NavigateTo("/Citas/Index");
+        navigation.NavigateTo("/DisponibilidadesCards");
     }
 }
+
+<style>
+    :root {
+        --primary-bg-color: #f8f9fa;
+        --header-bg-color: #3b5998;
+        --header-text-color: white;
+        --table-header-bg-color: #3b5998;
+        --table-header-text-color: white;
+        --table-bg-color: white;
+        --btn-primary-bg-color: #3b5998;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: white;
+        --card-bg-color: white;
+        --card-border-color: #ddd;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        --input-border-color: #ccc;
+        --label-text-color: white;
+    }
+
+    [data-theme="dark"] {
+        --primary-bg-color: #343a40;
+        --header-bg-color: #1e2125;
+        --header-text-color: #e9ecef;
+        --table-header-bg-color: #1e2125;
+        --table-header-text-color: #e9ecef;
+        --table-bg-color: #495057;
+        --btn-primary-bg-color: #1e2125;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: #e9ecef;
+        --card-bg-color: #495057;
+        --card-border-color: #6c757d;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        --input-border-color: #6c757d;
+        --label-text-color: #e9ecef;
+    }
+
+    body {
+        background-color: var(--primary-bg-color);
+        color: #212529;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--header-bg-color);
+        padding: 1rem;
+        color: var(--header-text-color);
+    }
+
+        .header h3 {
+            margin: 0;
+        }
+
+    .card {
+        background-color: var(--card-bg-color);
+        border: 1px solid var(--card-border-color);
+        box-shadow: var(--card-shadow);
+    }
+
+    .card-footer {
+        background-color: var(--primary-bg-color);
+    }
+
+    .form-label {
+        color: var(--label-text-color);
+    }
+
+    .form-control {
+        border: 1px solid var(--input-border-color);
+    }
+
+    .btn-oval {
+        border-radius: 25px;
+        border: none; /* Quita el borde del botón */
+    }
+
+    .btn-danger {
+        background-color: var(--btn-danger-bg-color);
+        color: var(--btn-text-color);
+        border-radius: 25px;
+        border: none; /* Quita el borde del botón */
+    }
+
+        .btn-danger:hover {
+            background-color: var(--btn-danger-bg-color);
+        }
+
+    .btn-success {
+        border-radius: 25px;
+        border: none; /* Quita el borde del botón */
+    }
+
+        .btn-success:hover {
+            background-color: var(--btn-primary-bg-color);
+        }
+</style>
