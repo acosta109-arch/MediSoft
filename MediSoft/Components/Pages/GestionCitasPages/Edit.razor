@@ -1,0 +1,227 @@
+﻿@page "/Citas/Edit/{CitaId:int}"
+@using MediSoft.Models
+@using MediSoft.Services
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@inject NavigationManager NavigationManager
+@inject CitasService CitasService
+@inject DoctoresService DoctoresService
+@inject NotificationService NotificationService
+
+<EditForm Model="cita" OnValidSubmit="Actualizar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
+    <div class="container mt-5">
+        <div class="card shadow-lg border-0 rounded">
+            <div class="header">
+                <h3><strong>Editar Cita</strong></h3>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Nombre:</label>
+                        <InputText id="nombre" class="form-control" @bind-Value="cita.NombreCompleto" />
+                        <ValidationMessage For="@(() => cita.NombreCompleto)" class="text-danger" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Cédula:</label>
+                        <InputText id="cedula" class="form-control" @bind-Value="cita.Cedula" />
+                        <ValidationMessage For="@(() => cita.Cedula)" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Número de Seguro Médico:</label>
+                        <InputText id="numeroSeguro" class="form-control" @bind-Value="cita.NumeroSeguro" />
+                        <ValidationMessage For="@(() => cita.NumeroSeguro)" class="text-danger" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Teléfono:</label>
+                        <InputText id="telefono" class="form-control" @bind-Value="cita.Telefono" />
+                        <ValidationMessage For="@(() => cita.Telefono)" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Seleccionar Doctor:</label>
+                        <InputSelect id="doctorSelect" class="form-control" @bind-Value="cita.DoctorId">
+                            <option value="">Seleccione un doctor</option>
+                            @foreach (var doctor in doctores)
+                            {
+                                <option value="@doctor.DoctorId">@doctor.NombreCompleto</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => cita.DoctorId)" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Fecha y Hora:</label>
+                        <input type="datetime-local" class="form-control" @bind="cita.Fecha" />
+                        <ValidationMessage For="@(() => cita.Fecha)" class="text-danger" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Motivo:</label>
+                        <InputText id="causa" class="form-control" @bind-Value="cita.Motivo" />
+                        <ValidationMessage For="@(() => cita.Motivo)" class="text-danger" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-light d-flex justify-content-between">
+                <a href="/GestionarCitas" class="btn btn-danger btn-oval"><i class="fas fa-arrow-left"></i> Volver</a>
+                <button type="submit" class="btn btn-success btn-oval"><i class="bi bi-save-fill"></i> Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int CitaId { get; set; }
+
+    private Citas cita = new Citas();
+    private List<Doctores> doctores = new List<Doctores>();
+    private List<ToastMessage> MensajeToast = new List<ToastMessage>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        doctores = await DoctoresService.ListarDoctores();
+        cita = await CitasService.ObtenerCitaPorId(CitaId) ?? new Citas();
+    }
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
+
+    private void Mensaje(ToastType toastType, string mensaje)
+    {
+        MensajeToast.Add(CreateToastMessage(toastType, mensaje));
+    }
+
+    public async Task Actualizar()
+    {
+        try
+        {
+            if (cita.Fecha < DateTime.Now)
+            {
+                Mensaje(ToastType.Danger, "La fecha y hora de la cita no puede ser anterior a la fecha y hora actual.");
+                return;
+            }
+
+            await CitasService.ActualizarCita(cita);
+            Mensaje(ToastType.Success, "Cita actualizada correctamente.");
+        }
+        catch (Exception ex)
+        {
+            Mensaje(ToastType.Danger, $"Ocurrió un error: {ex.Message}");
+        }
+    }
+
+    public void Volver()
+    {
+        NavigationManager.NavigateTo("/DisponibilidadesCards");
+    }
+}
+
+<style>
+    :root {
+        --primary-bg-color: #f8f9fa;
+        --header-bg-color: #007bff;
+        --header-text-color: white;
+        --card-bg-color: white;
+        --card-border-color: #ddd;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        --input-border-color: #ccc;
+        --label-text-color: black;
+        --btn-primary-bg-color: #007bff;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: white;
+    }
+
+    [data-theme="dark"] {
+        --primary-bg-color: #343a40;
+        --header-bg-color: #1e2125;
+        --header-text-color: #e9ecef;
+        --card-bg-color: #495057;
+        --card-border-color: #6c757d;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        --input-border-color: #6c757d;
+        --label-text-color: #e9ecef;
+        --btn-primary-bg-color: #1e2125;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: #e9ecef;
+    }
+
+    body {
+        background-color: var(--primary-bg-color);
+        color: #212529;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--header-bg-color);
+        padding: 1rem;
+        color: var(--header-text-color);
+    }
+
+        .header h3 {
+            margin: 0;
+        }
+
+    .card {
+        background-color: var(--card-bg-color);
+        border: 1px solid var(--card-border-color);
+        box-shadow: var(--card-shadow);
+    }
+
+    .card-footer {
+        background-color: var(--primary-bg-color);
+    }
+
+    .form-label {
+        color: var(--label-text-color);
+    }
+
+    .form-control {
+        border: 1px solid var(--input-border-color);
+    }
+
+    .btn-oval {
+        border-radius: 25px;
+        border: none;
+    }
+
+    .btn-custom {
+        background-color: var(--btn-primary-bg-color);
+        color: var(--btn-text-color);
+    }
+
+        .btn-custom:hover {
+            background-color: var(--btn-secondary-bg-color);
+        }
+
+    .btn-danger {
+        background-color: var(--btn-danger-bg-color);
+        color: var(--btn-text-color);
+    }
+
+        .btn-danger:hover {
+            background-color: var(--btn-danger-bg-color);
+        }
+</style>
+

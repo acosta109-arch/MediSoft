@@ -1,0 +1,228 @@
+﻿@page "/Citas/Delete/{CitaId:int}"
+@using MediSoft.Models
+@using MediSoft.Services
+@inject NavigationManager NavigationManager
+@inject CitasService CitasService
+
+@rendermode InteractiveServer
+
+<style>
+    :root {
+        --primary-bg-color: #f8f9fa;
+        --header-bg-color: #3b5998;
+        --header-text-color: white;
+        --table-header-bg-color: #3b5998;
+        --table-header-text-color: white;
+        --table-bg-color: white;
+        --btn-primary-bg-color: #3b5998;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: white;
+        --card-bg-color: white;
+        --card-border-color: #ddd;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        --input-border-color: #ccc;
+        --label-text-color: #000;
+        --text-color: #000;
+    }
+
+    [data-theme="dark"] {
+        --primary-bg-color: #343a40;
+        --header-bg-color: #1e2125;
+        --header-text-color: #e9ecef;
+        --table-header-bg-color: #1e2125;
+        --table-header-text-color: #e9ecef;
+        --table-bg-color: #495057;
+        --btn-primary-bg-color: #1e2125;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: #e9ecef;
+        --card-bg-color: #495057;
+        --card-border-color: #6c757d;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        --input-border-color: #6c757d;
+        --label-text-color: #e9ecef;
+        --text-color: #e9ecef;
+    }
+
+    body {
+        background-color: var(--primary-bg-color);
+        color: var(--text-color);
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--header-bg-color);
+        color: var(--header-text-color);
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
+
+    .card {
+        background-color: var(--card-bg-color);
+        border-color: var(--card-border-color);
+        box-shadow: var(--card-shadow);
+        color: var(--text-color);
+    }
+
+    .card-header {
+        background-color: var(--header-bg-color);
+        color: var(--header-text-color);
+    }
+
+    .card-footer {
+        background-color: var(--card-bg-color);
+    }
+
+    .btn-custom {
+        border-radius: 50px;
+        font-size: 0.9rem;
+    }
+
+    .btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+        border-radius: 50%;
+        color: var(--btn-text-color);
+        transition: background-color 0.2s ease;
+    }
+
+        .btn-icon.btn-primary {
+            background-color: var(--btn-primary-bg-color);
+        }
+
+        .btn-icon.btn-secondary {
+            background-color: var(--btn-secondary-bg-color);
+        }
+
+        .btn-icon.btn-danger {
+            background-color: var(--btn-danger-bg-color);
+        }
+
+        .btn-icon:hover {
+            filter: brightness(1.2);
+        }
+</style>
+
+<Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded">
+        <div class="card-header">
+            <h3><strong>Eliminar Cita</strong></h3>
+        </div>
+        @if (cita != null)
+        {
+            <h6 class="text-center bi bi-exclamation-triangle-fill text-warning">
+                <strong>¿Estás seguro de que quieres eliminar esta cita?</strong>
+            </h6>
+            <div class="card-body p-4">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="detail-label">ID:</div>
+                        <div class="detail-value">@cita.CitaId</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-label">Nombre Completo:</div>
+                        <div class="detail-value">@cita.NombreCompleto</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-label">Cédula:</div>
+                        <div class="detail-value">@cita.Cedula</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="detail-label">Número de Seguro Médico:</div>
+                        <div class="detail-value">@cita.NumeroSeguro</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-label">Teléfono:</div>
+                        <div class="detail-value">@cita.Telefono</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-label">Doctor:</div>
+                        <div class="detail-value">@cita.Doctor?.NombreCompleto</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="detail-label">Motivo:</div>
+                        <div class="detail-value">@cita.Motivo</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-label">Fecha y Hora:</div>
+                        <div class="detail-value">@cita.Fecha.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="card-footer bg-light d-flex justify-content-end mt-3">
+                    <a href="/GestionarCitas" class="btn btn-primary btn-custom">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                    <button class="btn btn-danger btn-custom ms-3" @onclick="EliminarCita">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int CitaId { get; set; }
+    private Citas? cita = null;
+    private List<ToastMessage> MensajeToast = new List<ToastMessage>();
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
+
+    private void Mensaje(ToastType toastType, string mensaje)
+    {
+        MensajeToast.Add(CreateToastMessage(toastType, mensaje));
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await BuscarCita();
+    }
+
+    private async Task BuscarCita()
+    {
+        cita = await CitasService.ObtenerCitaPorId(CitaId);
+        if (cita == null)
+        {
+            Mensaje(ToastType.Danger, "Cita no encontrada.");
+        }
+    }
+
+    private async Task EliminarCita()
+    {
+        if (cita != null)
+        {
+            var resultado = await CitasService.Eliminar(CitaId);
+            if (resultado)
+            {
+                Mensaje(ToastType.Success, "Cita eliminada correctamente.");
+            }
+            else
+            {
+                Mensaje(ToastType.Danger, "Error al eliminar la cita.");
+            }
+        }
+    }
+}
+
