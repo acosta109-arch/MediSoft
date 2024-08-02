@@ -1,5 +1,5 @@
 
-## ![MediSoft Animation](https://es.bloggif.com/tmp/f85e59e39ad549c362908455a39c9dc2/text.gif?1722560536)
+# MediSoft
 
 
 Medisoft es un sistema de citas médicas innovador creado y diseñado por los estudiantes Jairo Camilo Acosta y Erick Francisco Peña De Jesús de la Universidad Católica Nordestana (UCNE). Este sistema está diseñado para simplificar la programación y gestión de citas médicas, ofreciendo una plataforma intuitiva y eficiente para pacientes y administradores.
