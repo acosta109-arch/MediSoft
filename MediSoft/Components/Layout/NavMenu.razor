@@ -3,7 +3,8 @@
 @code {
     private bool isAdmin;
     private bool isLoading = true;
-    private bool subMenuConsultar = false;
+    private bool showPanelCitasMenu = false;
+    private bool showPanelControlMenu = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -11,9 +12,14 @@
         isLoading = false;
     }
 
-    private void ToggleSubMenu()
+    private void TogglePanelCitasMenu()
     {
-        subMenuConsultar = !subMenuConsultar;
+        showPanelCitasMenu = !showPanelCitasMenu;
+    }
+
+    private void TogglePanelControlMenu()
+    {
+        showPanelControlMenu = !showPanelControlMenu;
     }
 }
 
@@ -36,45 +42,48 @@ else
         <nav class="flex-column bg-facebook full-height-nav">
             <div class="nav-item px-3">
                 <NavLink class="nav-link text-white" href="" Match="NavLinkMatch.All">
-                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/2782/2782728.png" /> Dashboard
+                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/6821/6821002.png" /> Dashboard
                 </NavLink>
             </div>
 
             <div class="nav-item px-3">
-                <a class="nav-link text-white" href="#" @onclick="ToggleSubMenu">
-                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/760/760621.png" /> Consultar
+                <a class="nav-link text-white" href="#" @onclick="TogglePanelCitasMenu">
+                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/256/488/488676.png" /> Panel de Citas
                 </a>
-                @if (subMenuConsultar)
+                @if (showPanelCitasMenu)
                 {
-                    <div class="nav-item pl-5">
+                    <div class="nav-item pl-4">
                         <NavLink class="nav-link text-white" href="/DisponibilidadesCards">
-                            Mis citas
+                            <img style="width: 24px; height: 24px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/4228/4228731.png" /> Mis Citas
+                        </NavLink>
+                        <NavLink class="nav-link text-white" href="/GestionarCitas">
+                            <img style="width: 24px; height: 24px; margin-right: 5px;" src="https://cdn-icons-png.freepik.com/512/9473/9473310.png" /> Gestionar Citas
                         </NavLink>
                     </div>
                 }
             </div>
 
             <div class="nav-item px-3">
-                <NavLink class="nav-link text-white" href="/Disponibilidades/Index">
-                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/1572/1572562.png" /> Disponibilidad
-                </NavLink>
-            </div>
-
-            <div class="nav-item px-3">
-                <NavLink class="nav-link text-white" href="/Historial/Index">
-                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/706/706215.png" /> Pacientes
-                </NavLink>
-            </div>
-
-            <div class="nav-item px-3">
-                <NavLink class="nav-link text-white" href="/Doctores/Index">
-                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/3461/3461551.png" /> Doctores
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link text-white" href="/Doctores/Index">
-                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/600/600805.png" /> Noticias
-                </NavLink>
+                <a class="nav-link text-white" href="#" @onclick="TogglePanelControlMenu">
+                    <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/295/295173.png" /> Panel de Control
+                </a>
+                @if (showPanelControlMenu)
+                {
+                    <div class="nav-item pl-4">
+                        <NavLink class="nav-link text-white" href="/Disponibilidades/Index">
+                            <img style="width: 24px; height: 24px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/5152/5152336.png" /> Gestión de Disponibilidad
+                        </NavLink>
+                        <NavLink class="nav-link text-white" href="/Historial/Index">
+                            <img style="width: 24px; height: 24px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/1533/1533790.png" /> Gestión de Pacientes
+                        </NavLink>
+                        <NavLink class="nav-link text-white" href="/Doctores/Index">
+                            <img style="width: 24px; height: 24px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/387/387561.png" /> Gestión de Doctores
+                        </NavLink>
+                        <NavLink class="nav-link text-white" href="/Noticias/Index">
+                            <img style="width: 24px; height: 24px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/4021/4021922.png" /> Noticias y Actualizaciones
+                        </NavLink>
+                    </div>
+                }
             </div>
         </nav>
     </div>
