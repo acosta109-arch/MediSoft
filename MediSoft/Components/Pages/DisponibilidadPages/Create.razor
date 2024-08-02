@@ -72,8 +72,8 @@
             </div>
 
             <div class="card-footer bg-light d-flex justify-content-between">
-                <a href="/Disponibilidades/Index" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Volver</a>
-                <button type="submit" class="btn btn-success"><i class="bi bi-save-fill"></i> Guardar</button>
+                <a href="/Disponibilidades/Index" class="btn btn-danger btn-oval"><i class="fas fa-arrow-left"></i> Volver</a>
+                <button type="submit" class="btn btn-success btn-oval"><i class="bi bi-save-fill"></i> Guardar</button>
             </div>
         </div>
     </div>
@@ -210,19 +210,20 @@
         border: 1px solid var(--input-border-color);
     }
 
-    .btn-custom {
-        background-color: var(--btn-primary-bg-color);
-        color: var(--btn-text-color);
-        border-radius: 25px; /* Hace que el botón sea ovalado */
+    .btn-oval {
+        border-radius: 25px;
+        border: none; /* Quita el borde del botón */
     }
 
-        .btn-custom:hover {
+        .btn-oval:hover {
             background-color: var(--btn-secondary-bg-color);
         }
 
     .btn-danger {
         background-color: var(--btn-danger-bg-color);
         color: var(--btn-text-color);
+        border-radius: 25px;
+        border: none; /* Quita el borde del botón */
     }
 
         .btn-danger:hover {

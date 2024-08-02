@@ -73,8 +73,8 @@
             </div>
 
             <div class="card-footer bg-light d-flex justify-content-between">
-                <a href="/Disponibilidades/Index" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Volver</a>
-                <button type="submit" class="btn btn-success"><i class="bi bi-save-fill"></i> Guardar Cambios</button>
+                <a href="/Disponibilidades/Index" class="btn btn-danger btn-oval"><i class="fas fa-arrow-left"></i> Volver</a>
+                <button type="submit" class="btn btn-success btn-oval"><i class="bi bi-save-fill"></i> Guardar Cambios</button>
             </div>
         </div>
     </div>
@@ -133,7 +133,6 @@
             if (result)
             {
                 Mensaje(ToastType.Success, "Disponibilidad actualizada correctamente.");
-                NavigationManager.NavigateTo("/Disponibilidades/Index", true);
             }
             else
             {
@@ -145,7 +144,6 @@
             Mensaje(ToastType.Danger, $"Ocurrió un error: {ex.Message}");
         }
     }
-
 }
 
 <style>
@@ -221,10 +219,14 @@
         border: 1px solid var(--input-border-color);
     }
 
+    .btn-oval {
+        border-radius: 25px;
+        border: none;
+    }
+
     .btn-custom {
         background-color: var(--btn-primary-bg-color);
         color: var(--btn-text-color);
-        border-radius: 25px; /* Hace que el botón sea ovalado */
     }
 
         .btn-custom:hover {
