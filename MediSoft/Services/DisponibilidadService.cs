@@ -118,7 +118,7 @@ namespace MediSoft.Services
             try
             {
                 return await _contexto.Disponibilidades.AsNoTracking()
-                    .Include(d => d.Doctor) // Incluye el doctor relacionado
+                    .Include(d => d.Doctor) 
                     .FirstOrDefaultAsync(d => d.DisponibilidadId == id);
             }
             catch (Exception ex)
