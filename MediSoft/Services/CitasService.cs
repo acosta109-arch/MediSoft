@@ -13,7 +13,7 @@ public class CitasService
     {
         _contexto = contexto;
     }
-     
+
     public async Task<bool> Existe(int id)
     {
         return await _contexto.Citas.AnyAsync(c => c.CitaId == id);
@@ -50,17 +50,18 @@ public class CitasService
         return false;
     }
 
-    public async Task<Citas?> Buscar(int id)
+    public async Task<Citas> ObtenerCitaPorId(int id)
     {
         return await _contexto.Citas.AsNoTracking()
-        .FirstOrDefaultAsync(c => c.CitaId == id);
+            .Include(c => c.Doctor)
+            .FirstOrDefaultAsync(c => c.CitaId == id);
     }
 
     public async Task<List<Citas>> Listar(Expression<Func<Citas, bool>> criterio)
     {
         return await _contexto.Citas.AsNoTracking()
-        .Where(criterio)
-            .ToListAsync();
+            .Where(criterio)
+                .ToListAsync();
     }
 
     public async Task<List<Citas>> ListarCitas()
@@ -93,5 +94,20 @@ public class CitasService
             .Where(c => c.DoctorId == doctorId)
             .Include(c => c.Doctor)
             .ToListAsync();
+    }
+
+    public async Task<bool> ActualizarCita(Citas cita)
+    {
+        var entradas = _contexto.ChangeTracker.Entries<Citas>()
+            .Where(e => e.Entity.CitaId == cita.CitaId);
+
+        foreach (var entrada in entradas)
+        {
+            entrada.State = EntityState.Detached;
+        }
+
+        _contexto.Attach(cita);
+        _contexto.Entry(cita).State = EntityState.Modified;
+        return await _contexto.SaveChangesAsync() > 0;
     }
 }
