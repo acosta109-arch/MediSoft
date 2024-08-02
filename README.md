@@ -13,6 +13,7 @@ Medisoft destaca por su interfaz amigable, que facilita la organización de cita
 
 
 ## 🛠 Nuestras Herramientas
+![Visual Studio](https://img.shields.io/badge/Visual_Studio-%235C2D91?logo=visual-studio&logoColor=white&style=flat-square)
 ![Blazor](https://img.shields.io/badge/Blazor-%2317C1E6?logo=blazor&logoColor=white&style=flat-square)
 ![C#](https://img.shields.io/badge/C%23-%23239120?logo=c-sharp&logoColor=white&style=flat-square)
 ![HTML](https://img.shields.io/badge/HTML5-%23E34F26?logo=html5&logoColor=white&style=flat-square)
