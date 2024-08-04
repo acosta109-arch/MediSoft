@@ -4,6 +4,7 @@ using MediSoft.Services;
 using Microsoft.EntityFrameworkCore;
 using Radzen;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace MediSoft
 {
