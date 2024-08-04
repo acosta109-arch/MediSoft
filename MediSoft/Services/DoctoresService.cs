@@ -53,7 +53,7 @@ public class DoctoresService
     public async Task<Doctores?> Buscar(int id)
     {
         return await _contexto.Doctores
-       .Include(d => d.DetalleDoctores) // Incluye detalles
+       .Include(d => d.DetalleDoctores)
        .FirstOrDefaultAsync(d => d.DoctorId == id);
     }
 
