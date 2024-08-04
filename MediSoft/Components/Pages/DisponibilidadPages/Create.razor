@@ -7,6 +7,11 @@
 @inject DisponibilidadService DisponibilidadService
 @inject DoctoresService DoctoresService
 @inject NotificationService NotificationService
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
+
+<PageTitle>Crear nueva disponibilidad</PageTitle>
 
 <EditForm Model="nuevaDisponibilidad" OnValidSubmit="Guardar" FormName="DisponibilidadForm">
     <DataAnnotationsValidator />
@@ -84,7 +89,7 @@
     private List<Disponibilidades> listaDisponibilidades = new List<Disponibilidades>();
     private List<Doctores> doctores = new List<Doctores>();
     private List<ToastMessage> MensajeToast = new List<ToastMessage>();
-
+   
     protected override async Task OnInitializedAsync()
     {
         doctores = await DoctoresService.ListarDoctores();
@@ -212,7 +217,7 @@
 
     .btn-oval {
         border-radius: 25px;
-        border: none; /* Quita el borde del botón */
+        border: none; 
     }
 
         .btn-oval:hover {
@@ -223,7 +228,7 @@
         background-color: var(--btn-danger-bg-color);
         color: var(--btn-text-color);
         border-radius: 25px;
-        border: none; /* Quita el borde del botón */
+        border: none; 
     }
 
         .btn-danger:hover {

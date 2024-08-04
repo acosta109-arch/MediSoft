@@ -7,6 +7,11 @@
 @inject DisponibilidadService DisponibilidadService
 @inject DoctoresService DoctoresService
 @inject NotificationService NotificationService
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
+
+<PageTitle>Modificar disponibilidad</PageTitle>
 
 <EditForm Model="disponibilidad" OnValidSubmit="Actualizar">
     <DataAnnotationsValidator />
@@ -87,6 +92,7 @@
     private Disponibilidades disponibilidad = new Disponibilidades();
     private List<Doctores> doctores = new List<Doctores>();
     private List<ToastMessage> MensajeToast = new List<ToastMessage>();
+    
 
     protected override async Task OnInitializedAsync()
     {

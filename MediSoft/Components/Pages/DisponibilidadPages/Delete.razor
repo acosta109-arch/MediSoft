@@ -3,8 +3,12 @@
 @using MediSoft.Services
 @inject NavigationManager NavigationManager
 @inject DisponibilidadService disponibilidadService
-
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
 @rendermode InteractiveServer
+
+<PageTitle>Eliminar disponibilidad</PageTitle>
 
 <style>
     :root {
@@ -198,12 +202,38 @@
     </div>
 </div>
 
+
 @code {
     public Disponibilidades? disponibilidad = null;
 
     [Parameter]
     public int DisponibilidadId { get; set; }
     private List<ToastMessage> MensajeToast = new List<ToastMessage>();
+    public string acceso = "";
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var buscado = await AutentificacionService.usuarioActual(JSRuntime, UsuariosService);
+            if (buscado != null)
+            {
+                if (buscado.Rol == "Administrador")
+                {
+                    acceso = "permitido";
+                }
+                else
+                {
+                    acceso = "denegado";
+                }
+                StateHasChanged();
+            }
+            else
+            {
+                await AutentificacionService.CerrarSesion(JSRuntime);
+            }
+        }
+    }
 
     private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
     => new ToastMessage
