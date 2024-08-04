@@ -1,9 +1,17 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
+@inject NoticiasService noticiasService
+@inject CitasService citasService
+@inject DoctoresService doctoresService
+@inject DisponibilidadService disponibilidadService
 
+<PageTitle>MediSoft</PageTitle>
 
 <style>
     .card {
         transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        text-decoration: none; 
+        display: block; 
     }
 
         .card:hover {
@@ -18,8 +26,8 @@
     }
 
     .card-body img {
-        width: 3rem; /* Ajustar tamaño a medio */
-        height: 3rem; /* Ajustar tamaño a medio */
+        width: 3rem; 
+        height: 3rem; 
         display: block;
         margin: 0 auto;
     }
@@ -40,7 +48,7 @@
         }
 
         .table-custom thead {
-            background-color: #4267B2; /* Color azul de Facebook */
+            background-color: #4267B2; 
             color: #fff;
         }
 
@@ -63,105 +71,82 @@
     <div class="row">
         <!-- Pacientes Card -->
         <div class="col-md-4 mb-4">
-            <div class="card bg-danger text-white shadow-sm">
+            <NavLink class="card bg-danger text-white shadow-sm" style="text-decoration: none;">
                 <div class="card-header">
                     <img src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" alt="Medical Icon"> Pacientes
                 </div>
                 <div class="card-body">
                     <img src="https://cdn-icons-png.flaticon.com/512/706/706215.png" alt="Medical Icon">
-                    <p class="card-text">Registrados: 100</p>
+                    <p class="card-text">Nuestros pacientes son: @CantidadCitasPacientes</p>
                 </div>
-            </div>
+            </NavLink>
         </div>
         <!-- Doctores Card -->
         <div class="col-md-4 mb-4">
-            <div class="card bg-primary text-white shadow-sm">
+            <NavLink class="card bg-primary text-white shadow-sm"  style="text-decoration: none;">
                 <div class="card-header">
                     <img src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" alt="Medical Icon"> Doctores
                 </div>
                 <div class="card-body">
                     <img src="https://cdn-icons-png.flaticon.com/512/3461/3461551.png" alt="Medical Icon">
-                    <p class="card-text">Registrados: 12</p>
+                    <p class="card-text">Doctores: @CantidadDoctores</p>
                 </div>
-            </div>
+            </NavLink>
         </div>
 
         <!-- Doctores Disponibles Card -->
         <div class="col-md-4 mb-4">
-            <div class="card bg-info text-white shadow-sm">
+            <NavLink class="card bg-info text-white shadow-sm" style="text-decoration: none;">
                 <div class="card-header">
                     <img src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" alt="Medical Icon"> Doctores Disponibles
                 </div>
                 <div class="card-body">
                     <img src="https://cdn-icons-png.freepik.com/512/4850/4850909.png" alt="Medical Icon">
-                    <p class="card-text">Disponibles: 5</p>
+                    <p class="card-text">Docotores disponibles: @CantidadDoctoresDisponibles</p>
                 </div>
-            </div>
+            </NavLink>
         </div>
 
         <!-- Citas Card -->
         <div class="col-md-4 mb-4">
-            <div class="card bg-warning text-dark shadow-sm">
+            <NavLink class="card bg-warning text-dark shadow-sm" style="text-decoration: none;">
                 <div class="card-header">
                     <img src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" alt="Medical Icon"> Citas
                 </div>
                 <div class="card-body">
                     <img src="https://cdn-icons-png.flaticon.com/512/5980/5980048.png" alt="Medical Icon">
-                    <p class="card-text">Citas programadas: 8</p>
+                    <p class="card-text">Citas programadas: @CantidadCitasPacientes</p>
                 </div>
-            </div>
+            </NavLink>
         </div>
 
         <!-- Noticias Card -->
         <div class="col-md-4 mb-4">
-            <div class="card bg-success text-white shadow-sm">
+            <NavLink class="card bg-success text-white shadow-sm" style="text-decoration: none;">
                 <div class="card-header">
                     <img src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" alt="Medical Icon"> Noticias
                 </div>
                 <div class="card-body">
                     <img src="https://cdn-icons-png.flaticon.com/512/600/600805.png" alt="Medical Icon">
-                    <p class="card-text">Noticias: 5</p>
+                    <p class="card-text">Noticias: @CantidadNoticias</p>
                 </div>
-            </div>
+            </NavLink>
         </div>
-    </div>
-
-    <!-- Noticias Table -->
-    <div class="mt-4">
-        <h3 class="text-center text-primary">Noticias del Centro Médico</h3>
-        <table class="table table-custom">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Descripción</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Actualización en el sistema de gestión de pacientes.</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Nueva ala de pediatría inaugurada.</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Jornada de vacunación masiva este fin de semana.</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Se amplían horarios de consulta para especialidades.</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>Nuevo equipo de resonancia magnética disponible.</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 
 @code {
+    private int CantidadNoticias;
+    private int CantidadCitasPacientes;
+    private int CantidadDoctores;
+    private int CantidadDoctoresDisponibles;
 
+    protected override async Task OnInitializedAsync()
+    {
+        CantidadNoticias = await noticiasService.ObtenerCantidadNoticiasAsync();
+        CantidadCitasPacientes = await citasService.ObtenerCantidadCitasAsync();
+        CantidadDoctores = await doctoresService.ObtenerCantidadDoctoresAsync();
+        CantidadDoctoresDisponibles = await disponibilidadService.ObtenerCantidadDoctoresDisponiblesAsync();
+
+    }
 }
