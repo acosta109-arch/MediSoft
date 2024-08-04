@@ -1,0 +1,279 @@
+﻿@page "/Noticias/Create"
+@using MediSoft.Models
+@using MediSoft.Services
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@inject NavigationManager NavigationManager
+@inject NoticiasService NoticiasService
+@inject NotificationService NotificationService
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
+
+<PageTitle>Crear nueva noticia</PageTitle>
+@if (acceso == "permitido")
+{
+<EditForm Model="nuevaNoticia" OnValidSubmit="Guardar" FormName="NoticiaForm">
+    <DataAnnotationsValidator />
+    <Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
+    <div class="container mt-5">
+        <div class="card shadow-lg border-0 rounded">
+            <div class="header">
+                <h3><strong>Crear nueva noticia</strong></h3>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label text-black">Descripción:</label>
+                        <InputTextArea @bind-Value="nuevaNoticia.Descripcion" class="form-control" placeholder="Descripción" />
+                        <ValidationMessage For="@(() => nuevaNoticia.Descripcion)" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-black">Fecha:</label>
+                        <InputDate @bind-Value="nuevaNoticia.Fecha" class="form-control" />
+                        <ValidationMessage For="@(() => nuevaNoticia.Fecha)" class="text-danger" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-light d-flex justify-content-between">
+                <a href="/Noticias/Index" class="btn btn-danger btn-oval"><i class="fas fa-arrow-left"></i> Volver</a>
+                <button type="submit" class="btn btn-success btn-oval"><i class="bi bi-save-fill"></i> Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+}
+
+else if (acceso == "denegado")
+{
+    <div class="container text-center mt-5">
+        <div class="error-wrapper">
+            <img src="https://cdn-icons-png.flaticon.com/512/5138/5138594.png" alt="Access Denied" class="img-fluid" />
+            <h1 class="mt-3">Acceso Restringido</h1>
+            <p class="lead mt-3">
+                Lo sentimos, pero no tienes permiso para acceder a esta página.
+            </p>
+            <a href="/" class="custom-btn mt-4">Volver a Inicio</a>
+        </div>
+    </div>
+
+    <style>
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .error-wrapper {
+            padding: 2rem;
+            background-color: #f8d7da;
+            border-radius: 10px;
+            border: 1px solid #f5c6cb;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+        }
+
+        h1 {
+            color: #721c24;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .lead {
+            color: #721c24;
+            font-size: 1.125rem;
+        }
+
+        .custom-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #fff;
+            background: linear-gradient(135deg, #ff5e57, #ff8c52);
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: none;
+        }
+
+            .custom-btn:hover {
+                background: linear-gradient(135deg, #ff8c52, #ff5e57);
+                color: #fff;
+                box-shadow: 0 6px 8px rgba(0,0,0,0.3);
+                transform: translateY(-2px);
+            }
+
+            .custom-btn:active {
+                background: linear-gradient(135deg, #ff5e57, #ff8c52);
+                color: #fff;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+                transform: translateY(0);
+            }
+    </style>
+
+}
+
+@code {
+    private Noticias nuevaNoticia = new Noticias();
+    private List<ToastMessage> MensajeToast = new List<ToastMessage>();
+    public string acceso = "";
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var buscado = await AutentificacionService.usuarioActual(JSRuntime, UsuariosService);
+            if (buscado != null)
+            {
+                if (buscado.Rol == "Administrador")
+                {
+                    acceso = "permitido";
+                }
+                else
+                {
+                    acceso = "denegado";
+                }
+                StateHasChanged();
+            }
+            else
+            {
+                await AutentificacionService.CerrarSesion(JSRuntime);
+            }
+        }
+    }
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
+
+    private void Mensaje(ToastType toastType, string mensaje)
+    {
+        MensajeToast.Add(CreateToastMessage(toastType, mensaje));
+    }
+
+    public async Task Guardar()
+    {
+        try
+        {
+            await NoticiasService.Guardar(nuevaNoticia);
+            Mensaje(ToastType.Success, "Noticia guardada correctamente.");
+            nuevaNoticia = new Noticias();
+        }
+        catch (Exception ex)
+        {
+            Mensaje(ToastType.Danger, $"Ocurrió un error: {ex.Message}");
+        }
+    }
+}
+
+<style>
+    :root {
+        --primary-bg-color: #f8f9fa;
+        --header-bg-color: #3b5998;
+        --header-text-color: white;
+        --table-header-bg-color: #3b5998;
+        --table-header-text-color: white;
+        --table-bg-color: white;
+        --btn-primary-bg-color: #3b5998;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: white;
+        --card-bg-color: white;
+        --card-border-color: #ddd;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        --input-border-color: #ccc;
+        --label-text-color: white;
+    }
+
+    [data-theme="dark"] {
+        --primary-bg-color: #343a40;
+        --header-bg-color: #1e2125;
+        --header-text-color: #e9ecef;
+        --table-header-bg-color: #1e2125;
+        --table-header-text-color: #e9ecef;
+        --table-bg-color: #495057;
+        --btn-primary-bg-color: #1e2125;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: #e9ecef;
+        --card-bg-color: #495057;
+        --card-border-color: #6c757d;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        --input-border-color: #6c757d;
+        --label-text-color: #e9ecef;
+    }
+
+    body {
+        background-color: var(--primary-bg-color);
+        color: #212529;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--header-bg-color);
+        padding: 1rem;
+        color: var(--header-text-color);
+    }
+
+        .header h3 {
+            margin: 0;
+        }
+
+    .card {
+        background-color: var(--card-bg-color);
+        border: 1px solid var(--card-border-color);
+        box-shadow: var(--card-shadow);
+    }
+
+    .card-footer {
+        background-color: var(--primary-bg-color);
+    }
+
+    .form-label {
+        color: var(--label-text-color);
+    }
+
+    .form-control {
+        border: 1px solid var(--input-border-color);
+    }
+
+    .btn-oval {
+        border-radius: 25px;
+        border: none; 
+    }
+
+        .btn-oval:hover {
+            background-color: var(--btn-secondary-bg-color);
+        }
+
+    .btn-danger {
+        background-color: var(--btn-danger-bg-color);
+        color: var(--btn-text-color);
+        border-radius: 25px;
+        border: none; 
+    }
+
+        .btn-danger:hover {
+            background-color: var(--btn-danger-bg-color);
+        }
+</style>
+

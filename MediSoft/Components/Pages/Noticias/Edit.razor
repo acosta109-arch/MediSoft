@@ -1,0 +1,195 @@
+﻿@page "/Noticias/Edit/{NoticiaId:int}"
+@using MediSoft.Models
+@using MediSoft.Services
+
+@inject NavigationManager NavigationManager
+@inject NoticiasService NoticiasService
+@inject NotificationService NotificationService
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
+
+<PageTitle>Editar noticia</PageTitle>
+
+<EditForm Model="noticia" OnValidSubmit="Actualizar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
+    <div class="container mt-5">
+        <div class="card shadow-lg border-0 rounded">
+            <div class="header">
+                <h3><strong>Modificar Noticia</strong></h3>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label text-black">Descripción:</label>
+                        <InputTextArea @bind-Value="noticia.Descripcion" class="form-control" placeholder="Descripción" />
+                        <ValidationMessage For="@(() => noticia.Descripcion)" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label text-black">Fecha:</label>
+                        <InputDate @bind-Value="noticia.Fecha" class="form-control" />
+                        <ValidationMessage For="@(() => noticia.Fecha)" class="text-danger" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-light d-flex justify-content-between">
+                <a href="/Noticias/Index" class="btn btn-danger btn-oval"><i class="fas fa-arrow-left"></i> Volver</a>
+                <button type="submit" class="btn btn-success btn-oval"><i class="bi bi-save-fill"></i> Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int NoticiaId { get; set; }
+
+    private Noticias noticia = new Noticias();
+    private List<ToastMessage> MensajeToast = new List<ToastMessage>();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (NoticiaId != 0)
+        {
+            noticia = await NoticiasService.Buscar(NoticiaId) ?? new Noticias();
+        }
+    }
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
+
+    private void Mensaje(ToastType toastType, string mensaje)
+    {
+        MensajeToast.Add(CreateToastMessage(toastType, mensaje));
+    }
+
+    public async Task Actualizar()
+    {
+        try
+        {
+            var result = await NoticiasService.Guardar(noticia);
+            if (result)
+            {
+                Mensaje(ToastType.Success, "Noticia actualizada correctamente.");
+            }
+            else
+            {
+                Mensaje(ToastType.Danger, "No se pudo actualizar la noticia.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Mensaje(ToastType.Danger, $"Ocurrió un error: {ex.Message}");
+        }
+    }
+}
+
+<style>
+    :root {
+        --primary-bg-color: #f8f9fa;
+        --header-bg-color: #3b5998;
+        --header-text-color: white;
+        --table-header-bg-color: #3b5998;
+        --table-header-text-color: white;
+        --table-bg-color: white;
+        --btn-primary-bg-color: #3b5998;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: white;
+        --card-bg-color: white;
+        --card-border-color: #ddd;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        --input-border-color: #ccc;
+        --label-text-color: white;
+    }
+
+    [data-theme="dark"] {
+        --primary-bg-color: #343a40;
+        --header-bg-color: #1e2125;
+        --header-text-color: #e9ecef;
+        --table-header-bg-color: #1e2125;
+        --table-header-text-color: #e9ecef;
+        --table-bg-color: #495057;
+        --btn-primary-bg-color: #1e2125;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: #e9ecef;
+        --card-bg-color: #495057;
+        --card-border-color: #6c757d;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        --input-border-color: #6c757d;
+        --label-text-color: #e9ecef;
+    }
+
+    body {
+        background-color: var(--primary-bg-color);
+        color: #212529;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--header-bg-color);
+        padding: 1rem;
+        color: var(--header-text-color);
+    }
+
+        .header h3 {
+            margin: 0;
+        }
+
+    .card {
+        background-color: var(--card-bg-color);
+        border: 1px solid var(--card-border-color);
+        box-shadow: var(--card-shadow);
+    }
+
+    .card-footer {
+        background-color: var(--primary-bg-color);
+    }
+
+    .form-label {
+        color: var(--label-text-color);
+    }
+
+    .form-control {
+        border: 1px solid var(--input-border-color);
+    }
+
+    .btn-oval {
+        border-radius: 25px;
+        border: none;
+    }
+
+    .btn-custom {
+        background-color: var(--btn-primary-bg-color);
+        color: var(--btn-text-color);
+    }
+
+        .btn-custom:hover {
+            background-color: var(--btn-secondary-bg-color);
+        }
+
+    .btn-danger {
+        background-color: var(--btn-danger-bg-color);
+        color: var(--btn-text-color);
+    }
+
+        .btn-danger:hover {
+            background-color: var(--btn-danger-bg-color);
+        }
+</style>

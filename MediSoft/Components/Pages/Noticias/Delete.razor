@@ -1,0 +1,244 @@
+﻿@page "/Noticias/Delete/{NoticiaId:int}"
+@using MediSoft.Models
+@using MediSoft.Services
+@inject NavigationManager NavigationManager
+@inject NoticiasService noticiasService
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
+
+@rendermode InteractiveServer
+
+<PageTitle>Eliminar noticia</PageTitle>
+
+<style>
+    :root {
+        --primary-bg-color: #f8f9fa;
+        --header-bg-color: #3b5998;
+        --header-text-color: white;
+        --table-header-bg-color: #3b5998;
+        --table-header-text-color: white;
+        --table-bg-color: white;
+        --btn-primary-bg-color: #3b5998;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: white;
+        --card-bg-color: white;
+        --card-border-color: #ddd;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        --input-border-color: #ccc;
+        --label-text-color: #000;
+        --text-color: #000;
+    }
+
+    [data-theme="dark"] {
+        --primary-bg-color: #343a40;
+        --header-bg-color: #1e2125;
+        --header-text-color: #e9ecef;
+        --table-header-bg-color: #1e2125;
+        --table-header-text-color: #e9ecef;
+        --table-bg-color: #495057;
+        --btn-primary-bg-color: #1e2125;
+        --btn-secondary-bg-color: #6c757d;
+        --btn-danger-bg-color: #dc3545;
+        --btn-text-color: #e9ecef;
+        --card-bg-color: #495057;
+        --card-border-color: #6c757d;
+        --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        --input-border-color: #6c757d;
+        --label-text-color: #e9ecef;
+        --text-color: #e9ecef;
+    }
+
+    body {
+        background-color: var(--primary-bg-color);
+        color: var(--text-color);
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--header-bg-color);
+        color: var(--header-text-color);
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
+
+    .filter-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+        .filter-row .form-label {
+            font-weight: bold;
+            margin-right: 10px;
+            color: var(--label-text-color);
+        }
+
+    .table-responsive {
+        border-radius: 8px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .table thead {
+        background-color: var(--table-header-bg-color);
+        color: var(--table-header-text-color);
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .btn-custom {
+        border-radius: 50px;
+        font-size: 0.9rem;
+    }
+
+    .btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+        border-radius: 50%;
+        color: var(--btn-text-color);
+        transition: background-color 0.2s ease;
+    }
+
+        .btn-icon.btn-primary {
+            background-color: var(--btn-primary-bg-color);
+        }
+
+        .btn-icon.btn-secondary {
+            background-color: var(--btn-secondary-bg-color);
+        }
+
+        .btn-icon.btn-danger {
+            background-color: var (--btn-danger-bg-color);
+        }
+
+        .btn-icon:hover {
+            filter: brightness(1.2);
+        }
+
+    .form-control {
+        border-color: var(--input-border-color);
+    }
+
+    .card {
+        background-color: var(--card-bg-color);
+        border-color: var(--card-border-color);
+        box-shadow: var(--card-shadow);
+        color: var(--text-color);
+    }
+
+    .detail-label {
+        font-weight: bold;
+    }
+
+    .detail-value {
+        color: var(--text-color);
+    }
+</style>
+
+<Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded">
+        <div class="header text-center">
+            <h3><strong>Eliminar noticia</strong></h3>
+        </div>
+        @if (noticia != null)
+        {
+            <h6 class="text-center bi bi-exclamation-triangle-fill text-warning">
+                <strong>  ¿Estás seguro de que quieres eliminar esta noticia?</strong>
+            </h6>
+            <div class="card-body p-4">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="detail-label">ID:</div>
+                        <div class="detail-value">@noticia.NoticiaId</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-label">Fecha:</div>
+                        <div class="detail-value">@noticia.Fecha.ToShortDateString()</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="detail-label">Descripción:</div>
+                        <div class="detail-value">@noticia.Descripcion</div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="card-footer bg-light d-flex justify-content-end mt-3">
+                    <a href="/Noticias/Index" class="btn btn-primary btn-custom">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                    <button class="btn btn-danger btn-custom ms-3" @onclick="EliminarNoticia">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="text-center text-muted">Cargando detalles de la noticia...</div>
+        }
+    </div>
+</div>
+
+@code {
+    public Noticias? noticia = null;
+   
+    [Parameter]
+    public int NoticiaId { get; set; }
+    private List<ToastMessage> MensajeToast = new List<ToastMessage>();
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
+
+    private void Mensaje(ToastType toastType, string mensaje)
+    {
+        MensajeToast.Add(CreateToastMessage(toastType, mensaje));
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await BuscarNoticia();
+    }
+
+    private async Task BuscarNoticia()
+    {
+        noticia = await noticiasService.Buscar(NoticiaId);
+        if (noticia == null)
+        {
+            Mensaje(ToastType.Danger, "Noticia no encontrada.");
+        }
+    }
+
+    private async Task EliminarNoticia()
+    {
+        if (noticia != null)
+        {
+            var resultado = await noticiasService.Eliminar(NoticiaId);
+            if (resultado)
+            {
+                Mensaje(ToastType.Success, "Noticia eliminada correctamente.");
+            }
+            else
+            {
+                Mensaje(ToastType.Danger, "Error al eliminar la noticia.");
+            }
+        }
+    }
+}
