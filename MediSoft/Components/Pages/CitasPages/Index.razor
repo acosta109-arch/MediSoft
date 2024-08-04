@@ -2,64 +2,64 @@
 @inject DisponibilidadService disponibilidadService
 @inject NavigationManager navigation
 
-<PageTitle>Disponibilidades</PageTitle>
+<PageTitle>Mis citas</PageTitle>
 
 <style>
     .card {
         transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-        background-color: #4267B2; /* Color Facebook Blue */
-        color: white; /* Color de texto blanco para contraste */
-        border: 2px solid #28a745; /* Borde verde success */
-        border-radius: 12px; /* Bordes redondeados */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para profundidad */
+        background-color: #4267B2; 
+        color: white; 
+        border: 2px solid #28a745; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     }
 
         .card:hover {
-            transform: translateY(-8px); /* Movimiento sutil hacia arriba al pasar el mouse */
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada al pasar el mouse */
+            transform: translateY(-8px); 
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); 
         }
 
     .card-body {
-        padding: 20px; /* Espaciado interno para el contenido */
+        padding: 20px; 
     }
 
         .card-body img {
-            width: 32px; /* Tamaño de imagen más grande */
+            width: 32px; 
             height: 32px;
-            margin-right: 15px; /* Espaciado entre imagen y texto */
-            border-radius: 50%; /* Imagen circular */
+            margin-right: 15px; 
+            border-radius: 50%; 
         }
 
     .card-title {
-        font-size: 1.25rem; /* Tamaño de fuente para el título */
-        margin-bottom: 10px; /* Espaciado debajo del título */
+        font-size: 1.25rem; 
+        margin-bottom: 10px; 
     }
 
     .card-text {
-        font-size: 1rem; /* Tamaño de fuente para el texto */
-        margin-bottom: 10px; /* Espaciado debajo del texto */
+        font-size: 1rem; 
+        margin-bottom: 10px; 
     }
 
     .btn-oval {
-        border-radius: 50px; /* Bordes redondeados para los botones */
+        border-radius: 50px; 
         border: none;
         padding: 0.375rem 0.75rem;
-        font-size: 0.875rem; /* Tamaño de fuente para los botones */
-        text-align: center; /* Centrar el texto en los botones */
+        font-size: 0.875rem; 
+        text-align: center; 
     }
 
     .btn-success {
-        background-color: #28a745; /* Color de fondo del botón */
+        background-color: #28a745; 
         color: white;
     }
 
         .btn-success:hover {
-            background-color: #218838; /* Color de fondo al pasar el mouse */
+            background-color: #218838; 
         }
 
     .header-icon {
-        width: 3rem; /* Mismo tamaño que el texto h1 */
-        height: 3rem; /* Mismo tamaño que el texto h1 */
+        width: 3rem; 
+        height: 3rem; 
         margin-right: 10px;
     }
 
@@ -68,16 +68,16 @@
         align-items: center;
         justify-content: center;
         font-weight: bold;
-        font-size: 2.5rem; /* Tamaño de fuente para el h1 */
+        font-size: 2.5rem; 
         text-align: center;
     }
 
     .header-container {
-        margin-bottom: 20px; /* Espaciado debajo del encabezado */
+        margin-bottom: 20px; 
     }
 
     .filter-row {
-        margin-bottom: 15px; /* Espaciado debajo de los filtros */
+        margin-bottom: 15px; 
     }
 
     .no-results {
@@ -86,7 +86,7 @@
     }
 
         .no-results img {
-            width: 80px; /* Tamaño de la imagen */
+            width: 80px; 
             height: 80px;
         }
 
@@ -110,7 +110,6 @@
                 <option value="" disabled>Seleccionar</option>
                 <option value="nombreDoctor">Nombre del Doctor</option>
                 <option value="especialidad">Especialidad</option>
-                <!-- Add more filter options here if needed -->
             </InputSelect>
         </div>
         <div class="col-md-6">
@@ -207,7 +206,6 @@
                         .Where(d => d.Doctor?.Especialidad.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase) == true)
                         .ToList();
                     break;
-                    // Add more cases for other filters if needed
             }
         }
     }

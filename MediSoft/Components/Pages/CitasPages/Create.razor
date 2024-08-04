@@ -8,6 +8,8 @@
 @inject DoctoresService DoctoresService
 @inject NotificationService NotificationService
 
+<PageTitle>Agregar cita</PageTitle>
+
 <EditForm Model="nuevaCita" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
     <Toasts class="p-3" Messages="MensajeToast" Placement="ToastsPlacement.TopRight" />
@@ -118,7 +120,7 @@
 
             await CitasService.Guardar(nuevaCita);
             Mensaje(ToastType.Success, "Cita guardada correctamente.");
-            nuevaCita = new Citas(); // Limpiar el formulario
+            nuevaCita = new Citas(); 
         }
         catch (Exception ex)
         {
@@ -207,14 +209,14 @@
 
     .btn-oval {
         border-radius: 25px;
-        border: none; /* Quita el borde del botón */
+        border: none; 
     }
 
     .btn-danger {
         background-color: var(--btn-danger-bg-color);
         color: var(--btn-text-color);
         border-radius: 25px;
-        border: none; /* Quita el borde del botón */
+        border: none; 
     }
 
         .btn-danger:hover {
@@ -223,7 +225,7 @@
 
     .btn-success {
         border-radius: 25px;
-        border: none; /* Quita el borde del botón */
+        border: none; 
     }
 
         .btn-success:hover {
