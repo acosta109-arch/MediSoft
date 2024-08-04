@@ -1,0 +1,199 @@
+﻿@page "/PanelControl"
+
+@using Microsoft.AspNetCore.Components.Web
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
+
+<PageTitle>Panel de control</PageTitle>
+
+@if (acceso == "permitido")
+{
+<div class="container mt-5">
+    <div class="text-center">
+        <img src="https://cdn-icons-png.flaticon.com/512/295/295173.png" alt="Bienvenida" class="img-fluid mb-4" style="width: 100px; height: auto;" />
+
+        <h1 class="display-4">¡Bienvenido al Panel de Control!</h1>
+        <p class="lead">
+            Nos complace tenerte aquí, Administrador. Desde este panel podrás gestionar todos los aspectos del sistema. Navega a través de las opciones para acceder a todas las funcionalidades disponibles.
+        </p>
+        <hr class="my-4" />
+        <p>
+            Para comenzar, puedes explorar las siguientes secciones:
+        </p>
+        <div class="d-flex flex-wrap justify-content-center">
+            <a href="/Doctores/Index" class="btn custom-card custom-btn mx-2 mb-3">
+                <img src="https://cdn-icons-png.flaticon.com/512/387/387561.png" alt="Usuarios" class="card-icon" />
+                <span>Gestión de Doctores</span>
+            </a>
+            <a href="/Disponibilidades/Index" class="btn custom-card custom-btn mx-2 mb-3">
+                <img src="https://cdn-icons-png.flaticon.com/512/5152/5152336.png" alt="Citas" class="card-icon" />
+                <span>Gestión de Disponibilidad</span>
+            </a>
+            <a href="/Historial/Index" class="btn custom-card custom-btn mx-2 mb-3">
+                <img src="https://cdn-icons-png.flaticon.com/512/1533/1533790.png" alt="Reportes" class="card-icon" />
+                <span>Historial de Pacientes</span>
+            </a>
+            <a href="/Noticias/Index" class="btn custom-card custom-btn mx-2 mb-3">
+                <img src="https://cdn-icons-png.flaticon.com/512/4021/4021922.png" alt="Configuración" class="card-icon" />
+                <span>Noticias y Actualizaciones</span>
+            </a>
+        </div>
+    </div>
+    </div>
+}
+
+else if (acceso == "denegado")
+{
+    <div class="container text-center mt-5">
+        <div class="error-wrapper">
+            <img src="https://cdn-icons-png.flaticon.com/512/5138/5138594.png" alt="Access Denied" class="img-fluid" />
+            <h1 class="mt-3">Acceso Restringido</h1>
+            <p class="lead mt-3">
+                Lo sentimos, pero no tienes permiso para acceder a esta página.
+            </p>
+            <a href="/" class="custom-btn mt-4">Volver a Inicio</a>
+        </div>
+    </div>
+
+    <style>
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .error-wrapper {
+            padding: 2rem;
+            background-color: #f8d7da;
+            border-radius: 10px;
+            border: 1px solid #f5c6cb;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+        }
+
+        h1 {
+            color: #721c24;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .lead {
+            color: #721c24;
+            font-size: 1.125rem;
+        }
+
+        .custom-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #fff; 
+            background: linear-gradient(135deg, #ff5e57, #ff8c52);
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: none; 
+        }
+
+            .custom-btn:hover {
+                background: linear-gradient(135deg, #ff8c52, #ff5e57);
+                color: #fff;
+                box-shadow: 0 6px 8px rgba(0,0,0,0.3);
+                transform: translateY(-2px);
+            }
+
+            .custom-btn:active {
+                background: linear-gradient(135deg, #ff5e57, #ff8c52);
+                color: #fff;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+                transform: translateY(0);
+            }
+    </style>
+
+}
+
+<style>
+    .container {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #343a40;
+    }
+
+    p {
+        color: #6c757d;
+    }
+
+    .btn {
+        text-decoration: none;
+        color: #fff;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        width: 250px;
+        height: 150px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        background-color: #007bff; 
+    }
+
+    .custom-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .custom-card {
+        background-color: #007bff; 
+        color: #fff;
+    }
+</style>
+
+
+@code {
+    public string acceso = "";
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var buscado = await AutentificacionService.usuarioActual(JSRuntime, UsuariosService);
+            if (buscado != null)
+            {
+                if (buscado.Rol == "Administrador")
+                {
+                    acceso = "permitido";
+                }
+                else
+                {
+                    acceso = "denegado";
+                }
+                StateHasChanged();
+            }
+            else
+            {
+                await AutentificacionService.CerrarSesion(JSRuntime);
+            }
+        }
+    }
+}
