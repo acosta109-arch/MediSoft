@@ -26,7 +26,6 @@ namespace MediSoft.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (ex)
                 throw new Exception("Error verificando la existencia de la disponibilidad.", ex);
             }
         }
@@ -40,7 +39,6 @@ namespace MediSoft.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (ex)
                 throw new Exception("Error al insertar la disponibilidad.", ex);
             }
         }
@@ -54,7 +52,6 @@ namespace MediSoft.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (ex)
                 throw new Exception("Error al modificar la disponibilidad.", ex);
             }
         }
@@ -65,17 +62,14 @@ namespace MediSoft.Services
             {
                 if (disponibilidad.DisponibilidadId == 0)
                 {
-                    // Insertar nueva disponibilidad
                     await _contexto.Disponibilidades.AddAsync(disponibilidad);
                 }
                 else
                 {
-                    // Actualizar existencia
                     var existing = await _contexto.Disponibilidades.FindAsync(disponibilidad.DisponibilidadId);
                     if (existing == null)
                         return false;
 
-                    // Actualizar propiedades
                     existing.DoctorId = disponibilidad.DoctorId;
                     existing.DiasDisponibilidad = disponibilidad.DiasDisponibilidad;
                     existing.Consultorio = disponibilidad.Consultorio;
@@ -108,7 +102,6 @@ namespace MediSoft.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (ex)
                 throw new Exception("Error al eliminar la disponibilidad.", ex);
             }
         }
@@ -123,7 +116,6 @@ namespace MediSoft.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (ex)
                 throw new Exception("Error al buscar la disponibilidad.", ex);
             }
         }
@@ -139,7 +131,6 @@ namespace MediSoft.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (ex)
                 throw new Exception("Error al listar las disponibilidades.", ex);
             }
         }
@@ -154,7 +145,6 @@ namespace MediSoft.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (ex)
                 throw new Exception("Error al listar todas las disponibilidades.", ex);
             }
         }
@@ -167,7 +157,6 @@ namespace MediSoft.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (ex)
                 throw new Exception("Error al obtener la cantidad de disponibilidades.", ex);
             }
         }
@@ -183,7 +172,6 @@ namespace MediSoft.Services
             }
             catch (Exception ex)
             {
-                // Maneja la excepción y log
                 throw new Exception("Error al obtener las disponibilidades por doctor.", ex);
             }
         }
@@ -198,7 +186,6 @@ namespace MediSoft.Services
                     throw new Exception("Disponibilidad no encontrada.");
                 }
 
-                // Actualiza las propiedades existentes
                 existing.DoctorId = disponibilidad.DoctorId;
                 existing.DiasDisponibilidad = disponibilidad.DiasDisponibilidad;
                 existing.HoraInicio = disponibilidad.HoraInicio;
@@ -210,7 +197,6 @@ namespace MediSoft.Services
             }
             catch (Exception ex)
             {
-                // Log the exception (ex)
                 throw new Exception("Error al actualizar la disponibilidad.", ex);
             }
         }
@@ -218,6 +204,11 @@ namespace MediSoft.Services
         public async Task<Disponibilidades?> ObtenerDisponibilidadPorId(int id)
         {
             return await Buscar(id);
+        }
+
+        public async Task<int> ObtenerCantidadDoctoresDisponiblesAsync()
+        {
+            return await _contexto.Disponibilidades.CountAsync();
         }
     }
 }
