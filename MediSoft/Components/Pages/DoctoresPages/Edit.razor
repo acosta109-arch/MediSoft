@@ -6,6 +6,11 @@
 @inject DoctoresService doctoresService
 @inject NotificationService notificationService
 @rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
+
+<PageTitle>Modificar doctor</PageTitle>
 
 <EditForm Model="doctor" OnValidSubmit="Guardar" FormName="DoctorForm">
     <DataAnnotationsValidator />
@@ -93,7 +98,7 @@
 
             <div class="card-footer bg-light d-flex justify-content-between">
                 <a href="/Doctores/Index" class="btn btn-danger btn-custom"><i class="fas fa-arrow-left"></i> Volver</a>
-                <button type="submit" class="btn btn-success btn-custom"><i class="bi bi-save-fill"></i> Modificar</button>
+                    <button type="submit" class="btn btn-success btn-custom"><i class="bi bi-save-fill"></i> Guardar Cambios</button>
             </div>
         </div>
     </div>
@@ -105,7 +110,7 @@
     private DetalleDoctores detalleDoctor = new DetalleDoctores();
     private List<DetalleDoctores> listaDetallesDoctor = new List<DetalleDoctores>();
     private List<ToastMessage> MensajeToast = new List<ToastMessage>();
-
+    
     private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
     => new ToastMessage
         {

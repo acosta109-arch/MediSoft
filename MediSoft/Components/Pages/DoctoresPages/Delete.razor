@@ -3,8 +3,12 @@
 @using MediSoft.Services
 @inject NavigationManager NavigationManager
 @inject DoctoresService doctoresService
-
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
 @rendermode InteractiveServer
+
+<PageTitle>Eliminar doctor</PageTitle>
 
 <style>
     :root {
@@ -229,7 +233,7 @@
     [Parameter]
     public int DoctorId { get; set; }
     private List<ToastMessage> MensajeToast = new List<ToastMessage>();
-
+   
     private ToastMessage CreateToastMessage(ToastType toastType, string mensaje)
     => new ToastMessage
         {

@@ -2,9 +2,12 @@
 @rendermode InteractiveServer
 @inject DoctoresService doctoresService
 @inject NavigationManager navigation
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
 
-<PageTitle>Doctores</PageTitle>
 
+<PageTitle>Gesti&oacute;n de doctores</PageTitle>
 <style>
     :root {
         --primary-bg-color: #f8f9fa;
@@ -205,7 +208,7 @@
     public List<Doctores> doctoresFiltrados = new List<Doctores>();
     public string filtro { get; set; } = "id";
     public string valorFiltro { get; set; } = string.Empty;
-
+   
     protected override async Task OnInitializedAsync()
     {
         doctores = await doctoresService.Listar(d => true);

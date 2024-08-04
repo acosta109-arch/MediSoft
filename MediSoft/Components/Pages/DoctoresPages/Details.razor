@@ -3,8 +3,12 @@
 @using MediSoft.Services
 @inject NavigationManager NavigationManager
 @inject DoctoresService doctoresService
-
+@inject IJSRuntime JSRuntime
+@inject UsuariosService UsuariosService
+@inject AutentificacionService AutentificacionService
 @rendermode InteractiveServer
+
+<PageTitle>Detalles del doctor</PageTitle>
 
 <style>
     :root {
@@ -211,9 +215,10 @@
     </div>
 </div>
 
+
 @code {
     public Doctores? doctor = new Doctores();
-
+   
     [Parameter]
     public int DoctorId { get; set; }
 
