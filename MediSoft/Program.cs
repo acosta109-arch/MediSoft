@@ -19,9 +19,8 @@ namespace MediSoft
                 .AddInteractiveServerComponents();
 
             // Connection string de sql
-            var connectionString = builder.Configuration.GetConnectionString("ConStr");
-            builder.Services.AddDbContext<Context>(options =>
-                options.UseSqlServer(connectionString));
+            var ConStr = builder.Configuration.GetConnectionString("ConStr");
+            builder.Services.AddDbContext<Context>(c => c.UseSqlite(ConStr));
 
             builder.Services.AddBlazorBootstrap(); 
              
