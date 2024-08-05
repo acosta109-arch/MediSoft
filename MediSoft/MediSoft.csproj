@@ -21,4 +21,10 @@
     <PackageReference Include="Radzen.Blazor" Version="4.34.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\MediSoft.Db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
