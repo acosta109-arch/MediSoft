@@ -126,7 +126,7 @@
             var citasExistentes = await CitasService.ObtenerCitasPorDetallesExcluyendoId(cita.NombreCompleto, cita.Cedula, cita.NumeroSeguro, cita.Telefono, cita.CitaId);
             if (citasExistentes.Any())
             {
-                Mensaje(ToastType.Danger, "Ya existe una cita con el mismo nombre, cédula, número de seguro médico o teléfono.");
+                Mensaje(ToastType.Danger, "Ya existe una cita con el mismo nombre, cédula, número de seguro  M&eacute;dico: o teléfono.");
                 return;
             }
 
