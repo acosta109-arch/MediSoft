@@ -120,7 +120,7 @@
         @if (cita != null)
         {
             <h6 class="text-center bi bi-exclamation-triangle-fill text-warning">
-                <strong>¿Estás seguro de que quieres eliminar esta cita?</strong>
+                <strong>  ¿Estás seguro de que quieres eliminar esta cita?</strong>
             </h6>
             <div class="card-body p-4">
                 <div class="row mb-3">
@@ -168,7 +168,7 @@
                     <a href="/GestionarCitas" class="btn btn-primary btn-custom">
                         <i class="fas fa-arrow-left"></i> Volver
                     </a>
-                    <button class="btn btn-danger btn-custom ms-3" @onclick="EliminarCita">
+                    <button class="btn btn-danger btn-custom ms-3 bi bi-trash-fill" @onclick="EliminarCita">
                         Eliminar
                     </button>
                 </div>

@@ -115,12 +115,22 @@
     {
         try
         {
+            // Validar que la fecha de la cita no sea anterior a la fecha y hora de la actualidad
             if (cita.Fecha < DateTime.Now)
             {
-                Mensaje(ToastType.Danger, "La fecha y hora de la cita no puede ser anterior a la fecha y hora actual.");
+                Mensaje(ToastType.Danger, "La fecha y hora de la cita no puede ser anterior a la actualidad.");
                 return;
             }
 
+            // Verificar si ya existe una cita con los mismos detalles
+            var citasExistentes = await CitasService.ObtenerCitasPorDetallesExcluyendoId(cita.NombreCompleto, cita.Cedula, cita.NumeroSeguro, cita.Telefono, cita.CitaId);
+            if (citasExistentes.Any())
+            {
+                Mensaje(ToastType.Danger, "Ya existe una cita con el mismo nombre, cédula, número de seguro médico o teléfono.");
+                return;
+            }
+
+            // Actualizar la cita
             await CitasService.ActualizarCita(cita);
             Mensaje(ToastType.Success, "Cita actualizada correctamente.");
         }
@@ -129,6 +139,7 @@
             Mensaje(ToastType.Danger, $"Ocurrió un error: {ex.Message}");
         }
     }
+
 
     public void Volver()
     {
