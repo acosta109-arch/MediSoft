@@ -6,7 +6,8 @@
 @inject AutentificacionService AutentificacionService
 
 <PageTitle>Historial de citas</PageTitle>
-
+@if (acceso == "permitido")
+{
 <style>
     :root {
         --primary-bg-color: #f8f9fa;
@@ -141,7 +142,7 @@
 
 <div class="container mt-5">
     <div class="header">
-        <h3><strong>Historial de pacientes</strong></h3>
+            <h3><strong>Historial de pacientes</strong></h3>
     </div>
 
     <div class="filter-row">
@@ -168,6 +169,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Nombre completo</th>
+                        <th>Estado</th>
                     <th>Cédula</th>
                     <th>Número de seguro</th>
                     <th>Teléfono</th>
@@ -176,12 +178,28 @@
                     <th>Motivo</th>
                 </tr>
             </thead>
+                <style>
+                    .estado-modificado {
+                        background-color: #dc3545; 
+                        color: white; 
+                        font-weight: bold;
+                    }
+
+                    .estado-en-curso {
+                        background-color: #28a745; 
+                        color: white; 
+                        font-weight: bold;
+                    }
+                </style>
             <tbody>
                 @foreach (var cita in citasFiltradas)
                 {
                     <tr>
                         <td>PA-@cita.CitaId</td>
                         <td>@cita.NombreCompleto</td>
+                            <td class="@(cita.Estado == "Modificado" ? "estado-modificado" : "estado-en-curso") text-info">
+                                @cita.Estado
+                            </td>
                         <td>@cita.Cedula</td>
                         <td>@cita.NumeroSeguro</td>
                         <td>@cita.Telefono</td>
@@ -194,12 +212,114 @@
         </table>
     </div>
 </div>
+}
+
+else if (acceso == "denegado")
+{
+    <div class="container text-center mt-5">
+        <div class="error-wrapper">
+            <img src="https://cdn-icons-png.flaticon.com/512/5138/5138594.png" alt="Access Denied" class="img-fluid" />
+            <h1 class="mt-3">Acceso Restringido</h1>
+            <p class="lead mt-3">
+                Lo sentimos, pero no tienes permiso para acceder a esta página.
+            </p>
+            <a href="/" class="custom-btn mt-4">Volver a Inicio</a>
+        </div>
+    </div>
+
+    <style>
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .error-wrapper {
+            padding: 2rem;
+            background-color: #f8d7da;
+            border-radius: 10px;
+            border: 1px solid #f5c6cb;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+        }
+
+        h1 {
+            color: #721c24;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .lead {
+            color: #721c24;
+            font-size: 1.125rem;
+        }
+
+        .custom-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #fff;
+            background: linear-gradient(135deg, #ff5e57, #ff8c52);
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: none;
+        }
+
+            .custom-btn:hover {
+                background: linear-gradient(135deg, #ff8c52, #ff5e57);
+                color: #fff;
+                box-shadow: 0 6px 8px rgba(0,0,0,0.3);
+                transform: translateY(-2px);
+            }
+
+            .custom-btn:active {
+                background: linear-gradient(135deg, #ff5e57, #ff8c52);
+                color: #fff;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+                transform: translateY(0);
+            }
+    </style>
+
+}
 
 @code {
     public List<Citas> citas = new List<Citas>();
     public List<Citas> citasFiltradas = new List<Citas>();
     public string filtro { get; set; } = "doctor";
     public string valorFiltro { get; set; } = string.Empty;
+    public string acceso = "";
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var buscado = await AutentificacionService.usuarioActual(JSRuntime, UsuariosService);
+            if (buscado != null)
+            {
+                if (buscado.Rol == "Administrador")
+                {
+                    acceso = "permitido";
+                }
+                else
+                {
+                    acceso = "denegado";
+                }
+                StateHasChanged();
+            }
+            else
+            {
+                await AutentificacionService.CerrarSesion(JSRuntime);
+            }
+        }
+    }
     
     protected override async Task OnInitializedAsync()
     {
