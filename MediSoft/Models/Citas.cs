@@ -32,6 +32,8 @@ public class Citas
     public DateTime Fecha { get; set; }
 
     [Required(ErrorMessage = "Campo causa es obligatorio.")]
-    public string Motivo { get; set; } 
+    public string Motivo { get; set; }
+
+    public string Estado { get; set; }
 }
  
