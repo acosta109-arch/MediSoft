@@ -73,4 +73,12 @@ public class NoticiasService
     {
         return await _contexto.Noticias.CountAsync();
     }
+
+    public async Task<bool> ExisteNoticiaConDescripcion(string descripcion)
+    {
+        var noticiaExistente = await _contexto.Noticias
+            .FirstOrDefaultAsync(n => n.Descripcion == descripcion);
+        return noticiaExistente != null;
+    }
+
 }
