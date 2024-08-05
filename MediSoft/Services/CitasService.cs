@@ -33,6 +33,7 @@ public class CitasService
 
     public async Task<bool> Guardar(Citas cita)
     {
+        cita.Estado = "En curso";
         if (cita.CitaId == 0)
             return await Insertar(cita);
         else
@@ -98,6 +99,7 @@ public class CitasService
 
     public async Task<bool> ActualizarCita(Citas cita)
     {
+        cita.Estado = "Modificado";
         var entradas = _contexto.ChangeTracker.Entries<Citas>()
             .Where(e => e.Entity.CitaId == cita.CitaId);
 
@@ -110,4 +112,19 @@ public class CitasService
         _contexto.Entry(cita).State = EntityState.Modified;
         return await _contexto.SaveChangesAsync() > 0;
     }
+
+    public async Task<List<Citas>> ObtenerCitasPorDetalles(string nombre, string cedula, string numeroSeguroMedico, string telefono)
+    {
+        return await _contexto.Citas
+            .Where(c => c.NombreCompleto == nombre || c.Cedula == cedula || c.NumeroSeguro == numeroSeguroMedico || c.Telefono == telefono)
+            .ToListAsync();
+    }
+
+    public async Task<List<Citas>> ObtenerCitasPorDetallesExcluyendoId(string nombre, string cedula, string numeroSeguroMedico, string telefono, int citaId)
+    {
+        return await _contexto.Citas
+            .Where(c => (c.NombreCompleto == nombre || c.Cedula == cedula || c.NumeroSeguro == numeroSeguroMedico || c.Telefono == telefono) && c.CitaId != citaId)
+            .ToListAsync();
+    }
+
 }
