@@ -139,7 +139,7 @@
 
 <div class="container mt-5">
     <div class="header">
-        <h3><strong>Noticias del centor m&eacute;dico</strong></h3>
+        <h3><strong>Noticias del centro m&eacute;dico</strong></h3>
     </div>
 
     <div class="filter-row">
@@ -147,7 +147,7 @@
             <label for="Filtro" class="form-label">Filtrar por:</label>
             <InputSelect id="filtro" class="form-select" @bind-Value="filtro">
                 <option value="" disabled>Seleccionar</option>
-                <option value="id">NoticiaId</option>
+                <option value="id">#</option>
                 <option value="descripcion">Descripción</option>
                 <option value="fecha">Fecha</option>
             </InputSelect>
@@ -164,9 +164,9 @@
         <table class="table table-striped table-bordered mt-3">
             <thead class="table-striped table-secondary text-black">
                 <tr>
-                    <th>ID</th>
+                    <th>#</th>
                     <th>Descripción</th>
-                    <th>Fecha</th>
+                    <th>Fecha de publicaci&oacute;n</th>
                 </tr>
             </thead>
             <tbody>

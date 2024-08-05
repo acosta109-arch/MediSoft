@@ -7,7 +7,8 @@
 @inject AutentificacionService AutentificacionService
 
 <PageTitle>Noticias y actulizaciones</PageTitle>
-
+@if (acceso == "permitido")
+{
 <style>
     :root {
         --primary-bg-color: #f8f9fa;
@@ -142,7 +143,7 @@
 
 <div class="container mt-5">
     <div class="header">
-        <h3><strong>Noticias del centro m&eacute;dico</strong></h3>
+            <img style="width: 32px; height: 32px; margin-right: 5px;" src="https://cdn-icons-png.flaticon.com/512/600/600805.png" /><h3><strong>Noticias y actualizaciones</strong></h3>
         <a href="/Noticias/Create" class="btn btn-success bi bi-plus-circle-fill btn-custom"> Crear</a>
     </div>
 
@@ -151,7 +152,7 @@
             <label for="Filtro" class="form-label">Filtrar por:</label>
             <InputSelect id="filtro" class="form-select" @bind-Value="filtro">
                 <option value="" disabled>Seleccionar</option>
-                <option value="id">NoticiaId</option>
+                <option value="id">Id</option>
                 <option value="descripcion">Descripción</option>
                 <option value="fecha">Fecha</option>
             </InputSelect>
@@ -170,7 +171,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Descripción</th>
-                    <th>Fecha</th>
+                    <th>Fecha de publicaci&oacute;n</th>
                     <th>Detalles</th>
                     <th>Modificar</th>
                     <th>Eliminar</th>
@@ -198,12 +199,114 @@
         </table>
     </div>
 </div>
+}
+
+else if (acceso == "denegado")
+{
+    <div class="container text-center mt-5">
+        <div class="error-wrapper">
+            <img src="https://cdn-icons-png.flaticon.com/512/5138/5138594.png" alt="Access Denied" class="img-fluid" />
+            <h1 class="mt-3">Acceso Restringido</h1>
+            <p class="lead mt-3">
+                Lo sentimos, pero no tienes permiso para acceder a esta página.
+            </p>
+            <a href="/" class="custom-btn mt-4">Volver a Inicio</a>
+        </div>
+    </div>
+
+    <style>
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .error-wrapper {
+            padding: 2rem;
+            background-color: #f8d7da;
+            border-radius: 10px;
+            border: 1px solid #f5c6cb;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+        }
+
+        h1 {
+            color: #721c24;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .lead {
+            color: #721c24;
+            font-size: 1.125rem;
+        }
+
+        .custom-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #fff;
+            background: linear-gradient(135deg, #ff5e57, #ff8c52);
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: none;
+        }
+
+            .custom-btn:hover {
+                background: linear-gradient(135deg, #ff8c52, #ff5e57);
+                color: #fff;
+                box-shadow: 0 6px 8px rgba(0,0,0,0.3);
+                transform: translateY(-2px);
+            }
+
+            .custom-btn:active {
+                background: linear-gradient(135deg, #ff5e57, #ff8c52);
+                color: #fff;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+                transform: translateY(0);
+            }
+    </style>
+
+}
 
 @code {
     public List<Noticias> noticias = new List<Noticias>();
     public List<Noticias> noticiasFiltradas = new List<Noticias>();
     public string filtro { get; set; } = "id";
     public string valorFiltro { get; set; } = string.Empty;
+    public string acceso = "";
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var buscado = await AutentificacionService.usuarioActual(JSRuntime, UsuariosService);
+            if (buscado != null)
+            {
+                if (buscado.Rol == "Administrador")
+                {
+                    acceso = "permitido";
+                }
+                else
+                {
+                    acceso = "denegado";
+                }
+                StateHasChanged();
+            }
+            else
+            {
+                await AutentificacionService.CerrarSesion(JSRuntime);
+            }
+        }
+    }
    
 
     protected override async Task OnInitializedAsync()

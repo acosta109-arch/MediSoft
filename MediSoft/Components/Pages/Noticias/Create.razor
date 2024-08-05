@@ -126,7 +126,10 @@ else if (acceso == "denegado")
 }
 
 @code {
-    private Noticias nuevaNoticia = new Noticias();
+    private Noticias nuevaNoticia = new Noticias
+        {
+            Fecha = DateTime.Today 
+        };
     private List<ToastMessage> MensajeToast = new List<ToastMessage>();
     public string acceso = "";
 
@@ -172,6 +175,14 @@ else if (acceso == "denegado")
     {
         try
         {
+            bool existe = await NoticiasService.ExisteNoticiaConDescripcion(nuevaNoticia.Descripcion);
+
+            if (existe)
+            {
+                Mensaje(ToastType.Warning, "Ya existe una noticia con la misma descripción.");
+                return;
+            }
+
             await NoticiasService.Guardar(nuevaNoticia);
             Mensaje(ToastType.Success, "Noticia guardada correctamente.");
             nuevaNoticia = new Noticias();
@@ -181,6 +192,7 @@ else if (acceso == "denegado")
             Mensaje(ToastType.Danger, $"Ocurrió un error: {ex.Message}");
         }
     }
+
 }
 
 <style>
@@ -262,7 +274,6 @@ else if (acceso == "denegado")
     }
 
         .btn-oval:hover {
-            background-color: var(--btn-secondary-bg-color);
         }
 
     .btn-danger {
