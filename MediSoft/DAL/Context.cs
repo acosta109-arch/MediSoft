@@ -34,6 +34,40 @@ public class Context : DbContext
 				Rol = "Administrador"
 
 			});
-	} 
+
+        base.OnModelCreating(modelBuilder);
+        // Crear usuario por defecto
+        modelBuilder.Entity<Usuarios>().HasData(
+            new Usuarios
+            {
+                UsuarioId = 2,
+                NombreCompleto = "Jairo Camilo Acosta",
+                Cedula = "98765432100",
+                Usuario = "jairo_camilo",
+                Contrasena = "Jairo12345@@",
+                Telefono = "8094275715",
+                CorreoElectronico = "camiloacostajairo5@gmail.com",
+                Direccion = "Tenares",
+                Rol = "Paciente"
+
+            });
+
+        base.OnModelCreating(modelBuilder);
+        // Crear usuario por defecto
+        modelBuilder.Entity<Usuarios>().HasData(
+            new Usuarios
+            {
+                UsuarioId = 3,
+                NombreCompleto = "Erick Francisco Peña De Jesus",
+                Cedula = "11111111111",
+                Usuario = "erick_pena",
+                Contrasena = "Erick12345@@",
+                Telefono = "8292964961",
+                CorreoElectronico = "erickfran99@gmail.com",
+                Direccion = "Villa Tapia",
+                Rol = "Paciente"
+
+            });
+    } 
 }  
  
