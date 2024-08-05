@@ -86,10 +86,7 @@
     [Parameter]
     public int CitaId { get; set; }
     private List<Doctores> doctores = new List<Doctores>();
-    private Citas nuevaCita = new Citas
-        {
-            Fecha = DateTime.Today 
-        };
+    private Citas nuevaCita = new Citas();
     private List<ToastMessage> MensajeToast = new List<ToastMessage>();
 
     protected override async Task OnInitializedAsync()
@@ -116,10 +113,10 @@
     {
         try
         {
-            // Validar que la fecha y la hora de la cita no sea anterior a la actualidad
+            // Validar que la fecha y la hora de la cita no sean anteriores a la actualidad
             if (nuevaCita.Fecha < DateTime.Now)
             {
-                Mensaje(ToastType.Danger, "La fecha y hora de la cita no puede ser anterior a la actualidad.");
+                Mensaje(ToastType.Danger, "La fecha y hora de la cita no pueden ser anteriores a la actualidad.");
                 return;
             }
 
@@ -141,6 +138,7 @@
             Mensaje(ToastType.Danger, $"Ocurrió un error: {ex.Message}");
         }
     }
+
 
 
 
