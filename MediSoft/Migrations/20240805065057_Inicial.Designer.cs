@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MediSoft.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240805045455_Inicial")]
+    [Migration("20240805065057_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -217,6 +217,30 @@ namespace MediSoft.Migrations
                             Rol = "Administrador",
                             Telefono = "8096680075",
                             Usuario = "administrador"
+                        },
+                        new
+                        {
+                            UsuarioId = 2,
+                            Cedula = "98765432100",
+                            Contrasena = "Jairo12345@@",
+                            CorreoElectronico = "camiloacostajairo5@gmail.com",
+                            Direccion = "Tenares",
+                            NombreCompleto = "Jairo Camilo Acosta",
+                            Rol = "Paciente",
+                            Telefono = "8094275715",
+                            Usuario = "jairo_camilo"
+                        },
+                        new
+                        {
+                            UsuarioId = 3,
+                            Cedula = "11111111111",
+                            Contrasena = "Erick12345@@",
+                            CorreoElectronico = "erickfran99@gmail.com",
+                            Direccion = "Villa Tapia",
+                            NombreCompleto = "Erick Francisco Peña De Jesus",
+                            Rol = "Paciente",
+                            Telefono = "8292964961",
+                            Usuario = "erick_pena"
                         });
                 });
 

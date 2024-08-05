@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace MediSoft.Migrations
 {
     /// <inheritdoc />
@@ -133,7 +135,12 @@ namespace MediSoft.Migrations
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Cedula", "Contrasena", "CorreoElectronico", "Direccion", "NombreCompleto", "Rol", "Telefono", "Usuario" },
-                values: new object[] { 1, "12345678900", "Admin12345@@", "administrador-sistema@gmail.com", "Ninguna", "Administrador del sistema", "Administrador", "8096680075", "administrador" });
+                values: new object[,]
+                {
+                    { 1, "12345678900", "Admin12345@@", "administrador-sistema@gmail.com", "Ninguna", "Administrador del sistema", "Administrador", "8096680075", "administrador" },
+                    { 2, "98765432100", "Jairo12345@@", "camiloacostajairo5@gmail.com", "Tenares", "Jairo Camilo Acosta", "Paciente", "8094275715", "jairo_camilo" },
+                    { 3, "11111111111", "Erick12345@@", "erickfran99@gmail.com", "Villa Tapia", "Erick Francisco Peña De Jesus", "Paciente", "8292964961", "erick_pena" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Citas_DoctorId",
