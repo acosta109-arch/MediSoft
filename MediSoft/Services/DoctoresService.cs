@@ -74,4 +74,11 @@ public class DoctoresService
     {
         return await _contexto.Doctores.CountAsync();
     }
+
+    public async Task<bool> DoctorExiste(string nombre, string telefono, string correo)
+    {
+        return await _contexto.Doctores
+            .AnyAsync(d => d.NombreCompleto == nombre || d.Telefono == telefono || d.Email == correo);
+    }
+
 }
