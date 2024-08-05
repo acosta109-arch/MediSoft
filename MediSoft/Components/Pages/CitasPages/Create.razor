@@ -35,8 +35,8 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label class="form-label text-black">Número de Seguro Médico:</label>
-                        <InputText id="numeroSeguro" class="form-control" @bind-Value="nuevaCita.NumeroSeguro" placeholder="Número de seguro médico"/>
+                        <label class="form-label text-black">Número de Seguro M&eacute;dico:</label>
+                        <InputText id="numeroSeguro" class="form-control" @bind-Value="nuevaCita.NumeroSeguro" placeholder="Número de seguro M&eacute;dico" />
                         <ValidationMessage For="@(() => nuevaCita.NumeroSeguro)" class="text-danger" />
                     </div>
                     <div class="col-md-6">
@@ -99,7 +99,7 @@
     => new ToastMessage
         {
             Type = toastType,
-            Title = "Notificación",
+            Title = "Notificaci&oacute;n",
             HelpText = $"{DateTime.Now}",
             Message = mensaje,
         };
