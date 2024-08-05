@@ -210,5 +210,11 @@ namespace MediSoft.Services
         {
             return await _contexto.Disponibilidades.CountAsync();
         }
+
+        public async Task<bool> ConsultorioOcupado(string consultorio)
+        {
+            return await _contexto.Disponibilidades
+                .AnyAsync(d => d.Consultorio == consultorio);
+        }
     }
 }
