@@ -132,13 +132,16 @@
                     <div class="card">
                         <div class="card-body">
                             <img src="https://png.pngtree.com/png-clipart/20221003/original/pngtree-medical-logo-png-image_8653959.png" alt="Medical Logo" />
-                            <h5 class="card-title">Dr: @disponibilidad.Doctor?.NombreCompleto</h5>
-                            <p class="card-text">Especialidad: @disponibilidad.Doctor?.Especialidad</p>
-                            <p class="card-text">Disponibilidad: @disponibilidad.DiasDisponibilidad</p>
+                            <h5 class="card-title bi bi-person">  Dr. @disponibilidad.Doctor?.NombreCompleto</h5>
+                            <p class="card-text bi bi-postcard-heart">  Especialidad: @disponibilidad.Doctor?.Especialidad</p>
+                            <p class="card-text bi bi-calendar-week">  Disponibilidad: @disponibilidad.DiasDisponibilidad</p>
+                            <p class="card-text bi bi-alarm">  Hora inicio: @ConvertTo12HourFormat(disponibilidad.HoraInicio)</p>
+                            <p class="card-text bi bi-alarm-fill">  Hora Fin: @ConvertTo12HourFormat(disponibilidad.HoraFin)</p>
+                            <p class="card-text bi bi-hospital">  Consulturio: @disponibilidad.Consultorio</p>
                             <div class="row">
                                 <div class="col-6 mb-2">
                                     <a href="/Informacion/@disponibilidad.DoctorId" class="btn btn-success btn-oval w-100 mb-2 bi bi-info-circle-fill">
-                                        Información
+                                        Mas información
                                     </a>
                                     <a href="/Citas/Index/@disponibilidad.DoctorId" class="btn btn-success btn-oval w-100 bi bi-eye-fill">
                                         Ver Turnos
@@ -184,6 +187,15 @@
     {
         disponibilidades = await disponibilidadService.ListarDisponibilidades();
         disponibilidadesFiltradas = disponibilidades;
+    }
+
+    private string ConvertTo12HourFormat(string time24)
+    {
+        if (DateTime.TryParseExact(time24, "HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime time))
+        {
+            return time.ToString("hh:mm tt");
+        }
+        return time24;
     }
 
     private void Buscar()

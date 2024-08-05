@@ -75,6 +75,7 @@
             color: var(--label-text-color);
         }
 
+    
     .table-responsive {
         border-radius: 8px;
         box-shadow: var(--card-shadow);
@@ -138,12 +139,13 @@
     .detail-value {
         color: var(--text-color);
     }
+
 </style>
 
 <div class="container mt-5">
     <div class="card shadow-lg border-0 rounded">
         <div class="header text-center">
-            <h3><strong>Citas del Doctor</strong></h3>
+           <h3><strong>Turnos de citas</strong></h3>
         </div>
 
         <div class="card-body p-4">
@@ -173,18 +175,35 @@
                         <tr>
                             <th>Turno</th>
                             <th>Nombre completo</th>
+                            <th>Estado</th>
                             <th>Cédula</th>
                             <th>Teléfono</th>
                             <th>Fecha y Hora</th>
                             <th>Motivo</th>
                         </tr>
                     </thead>
+                    <style>
+                        .estado-modificado {
+                            background-color: #dc3545; 
+                            color: white; 
+                            font-weight: bold;
+                        }
+
+                        .estado-en-curso {
+                            background-color: #28a745; 
+                            color: white; 
+                            font-weight: bold;
+                        }
+                    </style>
                     <tbody>
                         @foreach (var cita in citasFiltradas.Select((c, index) => new { Cita = c, Turno = index + 1 }))
                         {
                             <tr>
                                 <td>@cita.Turno</td>
                                 <td>@cita.Cita.NombreCompleto</td>
+                                <td class="@(cita.Cita.Estado == "Modificado" ? "estado-modificado" : "estado-en-curso") text-info">
+                                    @cita.Cita.Estado
+                                </td>
                                 <td>@cita.Cita.Cedula</td>
                                 <td>@cita.Cita.Telefono</td>
                                 <td>@cita.Cita.Fecha.ToString("dd/MM/yyyy hh:mm tt")</td>
