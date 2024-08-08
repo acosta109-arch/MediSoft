@@ -8,8 +8,7 @@ Medisoft destaca por su interfaz amigable, que facilita la organización de cita
 
 
 
-
-
+![Descripción de la imagen](https://i.imgur.com/tuimagen.jpg)
 
 
 ## 🛠 Nuestras Herramientas
