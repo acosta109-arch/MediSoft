@@ -10,6 +10,15 @@ Medisoft destaca por su interfaz amigable, que facilita la organización de cita
 
 [![785-ABE7-D-00-E8-4-EB7-815-A-7-B14-D28-F4149.png](https://i.postimg.cc/9fW3zh4v/785-ABE7-D-00-E8-4-EB7-815-A-7-B14-D28-F4149.png)](https://postimg.cc/xXFpFB3R)
 
+## 🛠 Integrantes de este sistema
+
+## 🛠 Erick Francisco Peña De Jesús
+[![Captura-de-pantalla-2024-05-07-123232.png](https://i.postimg.cc/W3p8txF3/Captura-de-pantalla-2024-05-07-123232.png)](https://postimg.cc/7Cc0WsN8)
+
+## 🛠 Jairo Camilo Acosta
+[![Whats-App-Image-2024-08-08-at-7-42-06-AM.jpg](https://i.postimg.cc/d315NgwX/Whats-App-Image-2024-08-08-at-7-42-06-AM.jpg)](https://postimg.cc/tZKdYS1t)
+
+
 
 ## 🛠 Nuestras Herramientas
 ![Visual Studio](https://img.shields.io/badge/Visual_Studio-%235C2D91?logo=visual-studio&logoColor=white&style=flat-square)
